@@ -1,0 +1,24 @@
+### Register a fresher
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Rahul Sharma",
+  "email": "rahul@test.com",
+  "password": "password123",
+  "role": "FRESHER",
+  "skills": ["JavaScript", "React"]
+}
+
+### Login
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "rahul@test.com",
+  "password": "password123"
+}
+
+### Get current user (protected)
+GET http://localhost:5000/api/auth/me
+Authorization: Bearer paste_your_access_token_here

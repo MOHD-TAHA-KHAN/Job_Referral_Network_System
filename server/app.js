@@ -3,6 +3,8 @@ const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
 const morgan = require('morgan')
+const session = require('express-session')
+const passport = require('./config/passport')
 
 const { connectPostgres, connectMongo } = require('./config/db')
 require('./config/redis')
@@ -14,6 +16,16 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 app.use(helmet())
 app.use(morgan('dev'))
+
+app.use(session({
+  secret: process.env.JWT_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }
+}))
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use('/api/auth', require('./modules/auth/auth.routes'))
 
