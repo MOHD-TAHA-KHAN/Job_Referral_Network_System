@@ -1,4 +1,4 @@
-### Register a fresher
+### 1. Register a fresher
 POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
@@ -10,7 +10,21 @@ Content-Type: application/json
   "skills": ["JavaScript", "React"]
 }
 
-### Login
+### 2. Register a professional
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Priya Singh",
+  "email": "priya@test.com",
+  "password": "password123",
+  "role": "PROFESSIONAL",
+  "company": "Google",
+  "domain": "Backend",
+  "skills": ["Node.js", "Python", "System Design"]
+}
+
+### 3. Login
 POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
@@ -19,6 +33,9 @@ Content-Type: application/json
   "password": "password123"
 }
 
-### Get current user (protected)
+### 4. Get current user (paste token from login response)
 GET http://localhost:5000/api/auth/me
-Authorization: Bearer paste_your_access_token_here
+Authorization: Bearer paste_access_token_here
+
+### 5. Test Google OAuth (open in browser not REST client)
+# http://localhost:5000/api/auth/google
