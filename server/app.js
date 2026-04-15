@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express')
+const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const helmet = require('helmet')
 const morgan = require('morgan')
@@ -13,9 +14,14 @@ const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(cors())
 app.use(helmet())
 app.use(morgan('dev'))
+
+app.use(cookieParser());
+app.use(cors({
+  origin: ['http://localhost:5173'],
+  credentials: true // Mandatory for sending cookies across origins
+}));
 
 app.use(session({
   secret: process.env.JWT_SECRET,
