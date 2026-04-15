@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { register, login } = require('./auth.controller')
+const { register, login, refresh, logout } = require('./auth.controller')
 const { protect } = require('../../middleware/auth')
 const passport = require('../../config/passport')
 const jwt = require('jsonwebtoken')
@@ -8,6 +8,8 @@ const jwt = require('jsonwebtoken')
 // Existing routes
 router.post('/register', register)
 router.post('/login', login)
+router.post('/refresh', refresh)
+router.post('/logout', logout)
 
 // Protected test route
 router.get('/me', protect, (req, res) => {
