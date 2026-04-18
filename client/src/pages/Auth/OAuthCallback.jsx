@@ -23,7 +23,9 @@ const OAuthCallback = () => {
         setAccessToken(token)
         
         // Fetch the user's profile details using the new token
-        const { data } = await api.get('/profile')
+        const { data } = await api.get('/profile', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         
         // Tell Zustand that we are fully authenticated and save the user data
         useAuthStore.setState({ user: data.profile, isAuthenticated: true })
