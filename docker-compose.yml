@@ -1,6 +1,9 @@
 
 services:
 
+  # ---------------------
+  # 1. PostgreSQL
+  # ---------------------
   postgres:
     image: postgres:15
     container_name: refnet_postgres
@@ -14,6 +17,21 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: refnet_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@refnet.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres
+
+  # ---------------------
+  # 2. MongoDB
+  # ---------------------
   mongo:
     image: mongo:7
     container_name: refnet_mongo
@@ -23,12 +41,38 @@ services:
     volumes:
       - mongo_data:/data/db
 
+  mongo-express:
+    image: mongo-express
+    container_name: refnet_mongo_express
+    restart: always
+    ports:
+      - '8081:8081'
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+      ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - mongo
+
+  # ---------------------
+  # 3. Redis
+  # ---------------------
   redis:
     image: redis:7
     container_name: refnet_redis
     restart: always
     ports:
       - '6379:6379'
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: refnet_redis_commander
+    restart: always
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - '8082:8081'
+    depends_on:
+      - redis
 
 volumes:
   postgres_data:

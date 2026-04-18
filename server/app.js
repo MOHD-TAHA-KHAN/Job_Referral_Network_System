@@ -34,6 +34,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use('/api/auth', require('./modules/auth/auth.routes'))
+app.use('/api/profile', require('./modules/profile/profile.routes'))
 
 app.get('/', (req, res) => {
   res.json({ message: 'RefNet API is running!' })
