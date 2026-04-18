@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import useAuthStore from './store/auth.store'
+import OAuthCallback from './pages/Auth/OAuthCallback'
 
 import Login from './pages/Auth/Login'
 import Register from './pages/Auth/Register'
@@ -26,13 +27,13 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Navigate to="/login" />} />
-        
+
         <Route path="/login" element={
           <PublicRoute>
             <Login />
           </PublicRoute>
         } />
-        
+
         <Route path="/register" element={
           <PublicRoute>
             <Register />
@@ -40,6 +41,8 @@ function App() {
         } />
 
         {/* Protected Routes */}
+        <Route path="/auth/callback" element={<OAuthCallback />} />
+
         <Route path="/profile" element={
           <ProtectedRoute>
             <Profile />
