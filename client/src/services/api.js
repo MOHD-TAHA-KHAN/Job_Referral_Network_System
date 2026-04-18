@@ -71,4 +71,5 @@ api.interceptors.response.use(
   }
 )
 
+export const googleLogin = (token) => api.post('/auth/google', { token })
 export default api

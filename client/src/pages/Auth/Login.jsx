@@ -24,6 +24,11 @@ const Login = () => {
     }
   }
 
+  const handleGoogleLogin = () => {
+    // This sends the user to your backend which then redirects to Google
+    window.location.href = 'http://localhost:5000/api/auth/google';
+};
+
   return (
     <div className="auth-page">
       <div className="glass-container auth-card">
@@ -40,12 +45,18 @@ const Login = () => {
               onChange={e => setEmail(e.target.value)}
               required
             />
-            <div style={{ marginTop: '16px' }}>
-              <a className="btn" style={{ backgroundColor: '#fff', color: '#000' }} href="http://localhost:5000/api/auth/google">
-                Sign in with Google
-              </a>
-            </div>
           </div>
+          <div style={{ marginTop: '16px' }}>
+  
+            <button 
+              type="button" 
+              className="btn google-btn" 
+              onClick={handleGoogleLogin}
+              style={{ backgroundColor: '#fff', color: '#000', width: '100%' }}
+            >
+            Login with Google
+            </button>
+          </div>  
 
           <div className="form-group">
             <label>Password</label>
