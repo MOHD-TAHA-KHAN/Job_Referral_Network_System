@@ -25,9 +25,6 @@
 body {
   font-family: 'Outfit', sans-serif;
   background-color: var(--bg-color);
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%);
   color: var(--text-main);
   min-height: 100vh;
   display: flex;
@@ -131,13 +128,13 @@ a:hover {
 .btn-primary {
   background-color: var(--primary);
   color: white;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+  box-shadow: 2px 4px 14px rgba(59, 130, 246, 0.4);
 }
 
 .btn-primary:hover {
   background-color: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+  box-shadow: 2px 6px 20px rgba(59, 130, 246, 0.5);
 }
 
 .btn:disabled {
@@ -153,6 +150,8 @@ a:hover {
   align-items: center;
   justify-content: center;
   padding: 24px;
+  position: relative;
+  z-index: 10;
 }
 
 .auth-card {
@@ -177,6 +176,8 @@ a:hover {
   max-width: 900px;
   margin: 0 auto;
   width: 100%;
+  position: relative;
+  z-index: 10;
 }
 
 .dashboard-header {
@@ -242,4 +243,74 @@ a:hover {
   border-radius: 0 8px 8px 0;
   color: #bfdbfe;
   font-size: 0.9rem;
+}
+
+/* 3D Background Overlay */
+.three-bg-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none; /* Let clicks pass through to UI */
+}
+
+/* Anime.js Target Elements */
+.perspective-container {
+  perspective: 1200px;
+}
+
+.anime-item {
+  opacity: 0;
+  transform-style: preserve-3d;
+}
+
+/* Google Sign In Button */
+.google-btn {
+  background-color: white;
+  color: #3c4043;
+  border: 1px solid #dadce0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.google-btn:hover {
+  background-color: #f8faff;
+  box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+  transform: translateY(-1px);
+}
+
+.google-btn:active {
+  background-color: #f1f5f9;
+  box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+  transform: translateY(0);
+}
+
+.google-btn::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(66, 133, 244, 0.1);
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  transition: transform 0.4s ease-out;
+}
+
+.google-btn:active::after {
+  transform: translate(-50%, -50%) scale(2.5);
+  transition: 0s;
 }

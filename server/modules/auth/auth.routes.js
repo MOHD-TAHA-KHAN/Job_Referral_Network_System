@@ -30,6 +30,20 @@ router.get('/google/callback',
       process.env.JWT_SECRET,
       { expiresIn: '15m' }
     )
+
+    const refreshToken = jwt.sign(
+      { id: req.user.id },
+      process.env.JWT_REFRESH_SECRET,
+      { expiresIn: '7d' }
+    )
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    })
+
     // Redirect to frontend with token
     res.redirect(`${process.env.CLIENT_URL}/auth/callback?token=${accessToken}`)
   }
