@@ -29,27 +29,32 @@ const Login = () => {
       <div className="glass-container auth-card">
         <h1>Welcome Back</h1>
         <p className="subtitle">Login to request referrals and grow your network.</p>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Email Address</label>
-            <input 
-              type="email" 
-              placeholder="fresher@example.com" 
+            <input
+              type="email"
+              placeholder="fresher@example.com"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              required 
+              required
             />
+            <div style={{ marginTop: '16px' }}>
+              <a className="btn" style={{ backgroundColor: '#fff', color: '#000' }} href="http://localhost:5000/api/auth/google">
+                Sign in with Google
+              </a>
+            </div>
           </div>
-          
+
           <div className="form-group">
             <label>Password</label>
-            <input 
-              type="password" 
-              placeholder="••••••••" 
+            <input
+              type="password"
+              placeholder="••••••••"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              required 
+              required
             />
           </div>
 
