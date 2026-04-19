@@ -1,4 +1,5 @@
 const User = require('../../models/pg/User')
+const { Op } = require('sequelize')
 
 const getProfile = async (req, res) => {
   try {
@@ -37,4 +38,27 @@ const updateProfile = async (req, res) => {
   }
 }
 
-module.exports = { getProfile, updateProfile }
+const getUsers = async (req, res) => {
+  try {
+    const { role } = req.query
+    const whereClause = {}
+
+    if (role) {
+      // Handle multiple roles (role=PROFESSIONAL&role=HR)
+      const roles = Array.isArray(role) ? role : [role]
+      whereClause.role = { [Op.in]: roles }
+    }
+
+    const users = await User.findAll({
+      where: whereClause,
+      attributes: ['id', 'name', 'email', 'company', 'domain', 'role', 'referralSuccessRate'],
+      order: [['name', 'ASC']]
+    })
+
+    res.json({ success: true, users })
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error fetching users' })
+  }
+}
+
+module.exports = { getProfile, updateProfile, getUsers }
