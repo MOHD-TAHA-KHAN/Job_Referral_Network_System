@@ -6,7 +6,10 @@ import OAuthCallback from './pages/Auth/OAuthCallback'
 import Login from './pages/Auth/Login'
 import Register from './pages/Auth/Register'
 import Profile from './pages/Profile/Profile'
+import Jobs from './pages/Jobs/Jobs'
+import { Referrals } from './pages/Referrals'
 import './index.css'
+import './App.css'
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = useAuthStore(state => state.isAuthenticated)
@@ -46,6 +49,18 @@ function App() {
         <Route path="/profile" element={
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/jobs" element={
+          <ProtectedRoute>
+            <Jobs />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/referrals" element={
+          <ProtectedRoute>
+            <Referrals />
           </ProtectedRoute>
         } />
       </Routes>

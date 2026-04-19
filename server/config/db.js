@@ -13,8 +13,19 @@ const connectPostgres = async () => {
   let retries = 10
   while (retries) {
     try {
+      // Initialize model associations BEFORE authenticate/sync
+      const User = require('../models/pg/user')
+      const Job = require('../models/pg/job')
+      const Referral = require('../models/pg/referral')
+
+      // Set up associations
+      User.associate({ Job, Referral })
+      Job.associate({ User, Referral })
+      Referral.associate({ Job, User })
+
       await sequelize.authenticate()
-      await sequelize.sync({ alter: true })
+      await sequelize.sync({ force: true })
+
       console.log('PostgreSQL connected!')
       break
     } catch (err) {

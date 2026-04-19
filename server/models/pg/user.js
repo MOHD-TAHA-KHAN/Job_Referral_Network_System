@@ -48,4 +48,25 @@ const User = sequelize.define('User', {
   timestamps: true,
 })
 
+// Define associations
+User.associate = (models) => {
+  // HR users can create jobs
+  User.hasMany(models.Job, {
+    foreignKey: 'createdBy',
+    as: 'createdJobs'
+  })
+
+  // Users can request referrals (as freshers)
+  User.hasMany(models.Referral, {
+    foreignKey: 'requesterId',
+    as: 'requestedReferrals'
+  })
+
+  // Users can receive referral requests (as professionals)
+  User.hasMany(models.Referral, {
+    foreignKey: 'referrerId',
+    as: 'receivedReferrals'
+  })
+}
+
 module.exports = User

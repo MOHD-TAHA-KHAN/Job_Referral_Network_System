@@ -29,6 +29,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 #root {
@@ -51,8 +52,8 @@ a:hover {
 /* Glass UI Elements */
 .glass-container {
   background: var(--glass-bg);
-  backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -104,9 +105,87 @@ a:hover {
 .form-row {
   display: flex;
   gap: 16px;
+  flex-wrap: wrap;
 }
 .form-row .form-group {
   flex: 1;
+  min-width: 220px;
+}
+
+.profile-page {
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 80px 24px 40px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-page .dashboard-header {
+  width: 100%;
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 620px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.page-header h1 {
+  font-size: 2.4rem;
+  margin: 0;
+}
+
+.page-header p {
+  color: var(--text-muted);
+  margin: 0;
+  max-width: 760px;
+}
+
+.jobs-list,
+.referrals-list {
+  display: grid;
+  gap: 24px;
+}
+
+.job-card,
+.referral-card {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 24px;
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.job-card:hover,
+.referral-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.2);
+}
+
+.job-actions,
+.card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.header-actions .btn {
+  min-width: 150px;
+  border-radius: 18px;
 }
 
 /* Buttons */
@@ -115,13 +194,23 @@ a:hover {
   align-items: center;
   justify-content: center;
   padding: 12px 24px;
-  border-radius: 8px;
+  border-radius: 12px;
   font-family: inherit;
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
   border: none;
   transition: all 0.2s ease;
+  width: auto;
+  min-width: 130px;
+}
+
+.form-card .btn,
+.auth-card .btn,
+.profile-card .btn,
+.referral-form .btn,
+.jobs-page .btn-clear,
+.filters .btn-clear {
   width: 100%;
 }
 
@@ -135,6 +224,17 @@ a:hover {
   background-color: var(--primary-hover);
   transform: translateY(-1px);
   box-shadow: 2px 6px 20px rgba(59, 130, 246, 0.5);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.14);
+  transform: translateY(-1px);
 }
 
 .btn:disabled {
@@ -183,25 +283,35 @@ a:hover {
 .dashboard-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 40px;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
 }
 
 .header-actions {
   display: flex;
   gap: 16px;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+.header-actions .btn {
+  min-width: 140px;
+  border-radius: 18px;
 }
 
 .btn-logout {
-  background: transparent;
+  background: rgba(239, 68, 68, 0.08);
   color: var(--error);
-  border: 1px solid var(--error);
-  padding: 8px 16px;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  padding: 10px 18px;
+  border-radius: 18px;
 }
 
 .btn-logout:hover {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(239, 68, 68, 0.15);
+  transform: translateY(-1px);
 }
 
 .profile-card {
@@ -235,6 +345,21 @@ a:hover {
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
+.role-badge.hr {
+  background-color: rgba(234, 179, 8, 0.2);
+  color: #facc15;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.role-summary {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  color: #d1d5db;
+}
+
 .info-alert {
   background-color: rgba(59, 130, 246, 0.1);
   border-left: 4px solid var(--primary);
@@ -243,6 +368,21 @@ a:hover {
   border-radius: 0 8px 8px 0;
   color: #bfdbfe;
   font-size: 0.9rem;
+}
+
+.info-alert.fresher {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-left-color: rgba(59, 130, 246, 0.8);
+}
+
+.info-alert.professional {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-left-color: rgba(16, 185, 129, 0.8);
+}
+
+.info-alert.hr {
+  background-color: rgba(234, 179, 8, 0.1);
+  border-left-color: rgba(234, 179, 8, 0.8);
 }
 
 /* 3D Background Overlay */
