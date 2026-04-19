@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import useAuthStore from '../../store/auth.store'
 import NetworkBackground from '../../components/NetworkBackground'
+import TiltCard from '../../components/TiltCard'
 import anime from 'animejs'
 
 const Login = () => {
@@ -14,16 +15,20 @@ const Login = () => {
   const cardRef = useRef(null)
 
   useEffect(() => {
-    anime({
-      targets: cardRef.current.querySelectorAll('.anime-item'),
-      translateZ: [-100, 0],
-      translateY: [30, 0],
-      opacity: [0, 1],
-      rotateX: [10, 0],
-      easing: 'easeOutExpo',
-      duration: 1200,
-      delay: anime.stagger(150)
-    })
+    // Small timeout ensures cardRef completes its forwardRef mounting before anime queries it
+    setTimeout(() => {
+      if (!cardRef.current) return;
+      anime({
+        targets: cardRef.current.querySelectorAll('.anime-item'),
+        translateZ: [-100, 0],
+        translateY: [30, 0],
+        opacity: [0, 1],
+        rotateX: [10, 0],
+        easing: 'easeOutExpo',
+        duration: 1200,
+        delay: anime.stagger(150)
+      })
+    }, 50)
   }, [])
 
   const handleSubmit = async (e) => {
@@ -41,15 +46,14 @@ const Login = () => {
   }
 
   const handleGoogleLogin = () => {
-    // This sends the user to your backend which then redirects to Google
     window.location.href = 'http://localhost:5000/api/auth/google';
   };
 
   return (
     <>
-      <NetworkBackground />
-      <div className="auth-page perspective-container">
-        <div className="glass-container auth-card" ref={cardRef}>
+      <NetworkBackground alignment="left" />
+      <div className="auth-page perspective-container" style={{ justifyContent: 'flex-end', paddingRight: '8%' }}>
+        <TiltCard className="glass-container auth-card" ref={cardRef}>
           <h1 className="anime-item">Welcome Back</h1>
           <p className="subtitle anime-item">Login to request referrals and grow your network.</p>
 
@@ -107,7 +111,7 @@ const Login = () => {
           <p className="anime-item" style={{ marginTop: '32px', textAlign: 'center', fontSize: '0.9rem' }}>
             Don't have an account? <Link to="/register">Create one now</Link>
           </p>
-        </div>
+        </TiltCard>
       </div>
     </>
   )
