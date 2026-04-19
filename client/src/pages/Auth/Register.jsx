@@ -50,8 +50,8 @@ const Register = () => {
 
   return (
     <>
-      <NetworkBackground />
-      <div className="auth-page perspective-container">
+      <NetworkBackground alignment="left" />
+      <div className="auth-page perspective-container" style={{ justifyContent: 'flex-end', paddingRight: '8%' }}>
         <div className="glass-container auth-card" ref={cardRef}>
           <h1 className="anime-item">Create Account</h1>
           <p className="subtitle anime-item">Join RefNet to connect with IT professionals.</p>

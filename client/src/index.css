@@ -262,8 +262,8 @@ a:hover {
 }
 
 .anime-item {
-  opacity: 0;
   transform-style: preserve-3d;
+  will-change: transform, opacity;
 }
 
 /* Google Sign In Button */

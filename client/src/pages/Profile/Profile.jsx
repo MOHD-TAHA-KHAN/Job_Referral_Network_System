@@ -3,6 +3,7 @@ import { toast } from 'react-hot-toast'
 import useAuthStore from '../../store/auth.store'
 import api from '../../services/api'
 import NetworkBackground from '../../components/NetworkBackground'
+import TiltCard from '../../components/TiltCard'
 import anime from 'animejs'
 
 const Profile = () => {
@@ -40,16 +41,19 @@ const Profile = () => {
   }, [])
 
   useEffect(() => {
-    if (!loadingData && profileRef.current) {
-      anime({
-        targets: profileRef.current.querySelectorAll('.anime-item'),
-        translateZ: [-150, 0],
-        translateY: [40, 0],
-        opacity: [0, 1],
-        easing: 'easeOutExpo',
-        duration: 1000,
-        delay: anime.stagger(100)
-      })
+    if (!loadingData) {
+      setTimeout(() => {
+        if (!profileRef.current) return;
+        anime({
+          targets: profileRef.current.querySelectorAll('.anime-item'),
+          translateZ: [-150, 0],
+          translateY: [40, 0],
+          opacity: [0, 1],
+          easing: 'easeOutExpo',
+          duration: 1000,
+          delay: anime.stagger(100)
+        })
+      }, 50)
     }
   }, [loadingData])
 
@@ -93,8 +97,8 @@ const Profile = () => {
 
   return (
     <>
-      <NetworkBackground />
-      <div className="dashboard-page perspective-container" ref={profileRef}>
+      <NetworkBackground alignment="right" />
+      <div className="dashboard-page perspective-container" ref={profileRef} style={{ margin: '0', marginLeft: '5%', maxWidth: '500px' }}>
         <div className="dashboard-header anime-item">
           <div>
             <h1 style={{fontSize: '2.5rem', marginBottom: '8px'}}>{user.name}</h1>
@@ -105,7 +109,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="glass-container profile-card">
+        <TiltCard className="glass-container profile-card">
           <h2 className="anime-item">Your Profile Details</h2>
           
           {!isPro && (
@@ -168,7 +172,7 @@ const Profile = () => {
             </button>
 
           </form>
-        </div>
+        </TiltCard>
       </div>
     </>
   )
