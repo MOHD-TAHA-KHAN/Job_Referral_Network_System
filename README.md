@@ -238,7 +238,7 @@ This project uses a **dual-token JWT strategy**:
 
 - [x] Project scaffold & Docker setup
 - [x] Auth system (JWT + Google OAuth)
-- [ ] User profiles (Fresher & Professional)
+- [x] User profiles (Fresher & Professional)
 - [ ] Job listings with search & filters
 - [ ] Referral request flow
 - [ ] Smart matching algorithm
