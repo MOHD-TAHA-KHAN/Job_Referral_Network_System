@@ -10,41 +10,93 @@ const Job = sequelize.define('Job', {
   title: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      len: [5, 255]
+    }
   },
   description: {
     type: DataTypes.TEXT,
     allowNull: false,
+    validate: {
+      len: [20, 5000]
+    }
   },
   company: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      len: [2, 255]
+    }
   },
   location: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      len: [2, 255]
+    }
   },
   requiredSkills: {
     type: DataTypes.ARRAY(DataTypes.STRING),
     defaultValue: [],
-    allowNull: false,
+    allowNull: false
   },
   domain: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      len: [2, 100]
+    }
   },
   salaryMin: {
     type: DataTypes.INTEGER,
     allowNull: true,
+    validate: {
+      min: 0,
+      max: 10000000
+    }
   },
   salaryMax: {
     type: DataTypes.INTEGER,
     allowNull: true,
+    validate: {
+      min: 0,
+      max: 10000000
+    }
+  },
+  experienceLevel: {
+    type: DataTypes.ENUM('ENTRY', 'MID', 'SENIOR', 'LEAD'),
+    defaultValue: 'ENTRY',
+    allowNull: false
+  },
+  jobType: {
+    type: DataTypes.ENUM('FULL_TIME', 'PART_TIME', 'CONTRACT', 'INTERNSHIP', 'REMOTE'),
+    defaultValue: 'FULL_TIME',
+    allowNull: false
+  },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+    allowNull: false
+  },
+  applicationCount: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    allowNull: false
+  },
+  viewCount: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    allowNull: false
+  },
+  expiresAt: {
+    type: DataTypes.DATE,
+    allowNull: true
   },
   createdBy: {
     type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: 'Users', // Sequelize pluralizes table names
+      model: 'Users',
       key: 'id'
     }
   },
@@ -62,6 +114,28 @@ const Job = sequelize.define('Job', {
     },
     {
       fields: ['createdBy']
+    },
+    {
+      fields: ['isActive']
+    },
+    {
+      fields: ['experienceLevel']
+    },
+    {
+      fields: ['jobType']
+    },
+    {
+      fields: ['salaryMin', 'salaryMax']
+    },
+    {
+      fields: ['expiresAt']
+    },
+    {
+      fields: ['requiredSkills'],
+      using: 'gin'
+    },
+    {
+      fields: ['createdAt']
     }
   ]
 })

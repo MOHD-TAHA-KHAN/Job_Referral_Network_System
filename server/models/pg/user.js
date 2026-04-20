@@ -10,42 +10,101 @@ const User = sequelize.define('User', {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      len: [2, 255]
+    }
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
+    validate: {
+      isEmail: true
+    }
   },
   password: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      len: [6, 255]
+    }
   },
   role: {
     type: DataTypes.ENUM('FRESHER', 'PROFESSIONAL', 'HR'),
     defaultValue: 'FRESHER',
+    allowNull: false
   },
   company: {
     type: DataTypes.STRING,
     allowNull: true,
+    validate: {
+      len: [2, 255]
+    }
   },
   domain: {
     type: DataTypes.STRING,
     allowNull: true,
+    validate: {
+      len: [2, 100]
+    }
   },
   skills: {
     type: DataTypes.ARRAY(DataTypes.STRING),
-    defaultValue: [],
+    defaultValue: []
   },
   resumeUrl: {
     type: DataTypes.STRING,
     allowNull: true,
+    validate: {
+      isUrl: true
+    }
   },
   referralSuccessRate: {
     type: DataTypes.FLOAT,
     defaultValue: 0,
+    validate: {
+      min: 0,
+      max: 100
+    }
   },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+    allowNull: false
+  },
+  lastLogin: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  profileCompleted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: false
+  }
 }, {
   timestamps: true,
+  indexes: [
+    {
+      unique: true,
+      fields: ['email']
+    },
+    {
+      fields: ['role']
+    },
+    {
+      fields: ['domain']
+    },
+    {
+      fields: ['company']
+    },
+    {
+      fields: ['isActive']
+    },
+    {
+      fields: ['skills'],
+      using: 'gin'
+    }
+  ]
 })
 
 // Define associations
