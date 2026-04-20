@@ -45,7 +45,7 @@ referral-network/
 │       └── services/        # Axios API layer
 │
 └── server/                  # Express + Node.js backend
-    ├── config/              # DB, Redis, env config
+    ├── config/              # Database and environment configuration
     ├── middleware/          # JWT auth, rate limiter, error handler
     ├── modules/
     │   ├── auth/            # Register, login, OAuth
@@ -58,8 +58,7 @@ referral-network/
     │   ├── dashboard/       # Aggregated user stats
     │   └── matching/        # Smart matching algorithm
     └── models/
-        ├── pg/              # Sequelize models (PostgreSQL)
-        └── mongo/           # Mongoose models (MongoDB)
+        └── pg/              # Sequelize models (PostgreSQL)
 ```
 
 ---
@@ -79,10 +78,8 @@ referral-network/
 - **JWT** — Access + refresh token authentication
 - **bcryptjs** — Password hashing
 
-### Databases (Hybrid)
-- **PostgreSQL** — Structured relational data (users, jobs, referrals)
-- **MongoDB** — Flexible document data (messages, activity logs, profiles)
-- **Redis** — Sessions, caching, rate limiting, pub/sub
+### Database
+- **PostgreSQL** — Complete database solution with enhanced features (users, jobs, referrals, caching, full-text search)
 
 ### External Services
 - **Cloudinary** — Resume & file storage
@@ -124,10 +121,15 @@ The top 5 ranked professionals are shown to the fresher, who can then choose who
 
 ## 🗄️ Database Design
 
-**Why Hybrid (PostgreSQL + MongoDB)?**
+**PostgreSQL-Only Architecture**
 
-- **PostgreSQL** handles structured, relational data where integrity matters — users, jobs, referral requests, companies. Foreign key relationships and joins keep this data consistent.
-- **MongoDB** handles flexible, document-style data — chat messages, notification payloads, activity logs, and profile details like skills arrays that change shape often.
+- **PostgreSQL** handles all data types with advanced features:
+  - Structured relational data (users, jobs, referrals)
+  - Array fields for skills and requirements
+  - Full-text search capabilities
+  - Cache tables for session management
+  - JSONB fields for flexible data storage
+  - Advanced indexing for optimal performance
 
 ---
 
@@ -135,7 +137,7 @@ The top 5 ranked professionals are shown to the fresher, who can then choose who
 
 ### Prerequisites
 - Node.js v20+
-- Docker Desktop (for PostgreSQL, MongoDB, Redis)
+- Docker Desktop (for PostgreSQL)
 - Git
 
 ### 1. Clone the repository
@@ -144,9 +146,9 @@ git clone https://github.com/YOUR_USERNAME/referral-network.git
 cd referral-network
 ```
 
-### 2. Start databases with Docker
+### 2. Start PostgreSQL with Docker
 ```bash
-docker-compose up -d
+docker-compose up postgres pgadmin -d
 ```
 
 ### 3. Setup the server
@@ -168,6 +170,7 @@ npm run dev
 The app will be running at:
 - Frontend: `http://localhost:5173`
 - Backend API: `http://localhost:5000`
+- Database Admin: `http://localhost:5050` (pgAdmin)
 
 ---
 
@@ -176,33 +179,28 @@ The app will be running at:
 Create a `.env` file inside the `server/` directory:
 
 ```env
+# Server Configuration
 PORT=5000
+NODE_ENV=development
 
-# JWT
+# Database Configuration (PostgreSQL Only)
+PG_URI=postgresql://postgres:password@localhost:5433/referraldb
+
+# JWT Configuration
 JWT_SECRET=your_jwt_secret_here
 JWT_REFRESH_SECRET=your_refresh_secret_here
 
-# PostgreSQL
-PG_URI=postgresql://postgres:password@localhost:5432/referraldb
-
-# MongoDB
-MONGO_URI=mongodb://localhost:27017/referraldb
-
-# Redis
-REDIS_URL=redis://localhost:6379
-
-# Cloudinary
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-
-# Email
+# External Services
+CLOUDINARY_URL=your_cloudinary_url
 EMAIL_USER=your@gmail.com
 EMAIL_PASS=your_app_password
 
 # Google OAuth
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# Client Configuration
+CLIENT_URL=http://localhost:5173
 ```
 
 ---
@@ -213,7 +211,7 @@ This project uses a **dual-token JWT strategy**:
 
 - **Access token** — short-lived (15 min), stored in memory, sent in `Authorization: Bearer` header
 - **Refresh token** — long-lived (7 days), stored in `httpOnly` cookie
-- On logout, refresh token is added to a **Redis blacklist** (TTL = remaining token lifetime)
+- On logout, refresh token is added to a **PostgreSQL blacklist table** (TTL = remaining token lifetime)
 
 ---
 

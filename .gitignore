@@ -1,5 +1,108 @@
+# Environment Variables
 .env
-node_modules
-dist
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+jspm_packages/
+
+# Build Outputs
+dist/
+build/
+*.tsbuildinfo
+.next/
+.nuxt/
+.out/
+.storybook-out/
+
+# Cache directories
+.cache/
+.parcel-cache/
+.npm/
+.eslintcache/
+
+# Logs
+logs/
+*.log
+lerna-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Test coverage
+coverage/
+*.lcov
+.nyc_output
+test-results/
+
+# Package files
+*.tgz
+*.tar.gz
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+
+# Operating System files
+# MacOS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# Temporary files
+tmp/
+temp/
+
+# Application specific
+uploads/
+public/uploads/
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+
+# Backup files
+*.backup
+*.bak
+*.dump
+*.sql.backup
+
+# PostgreSQL specific
+*.dump
+*.sql.backup
+
+
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
 

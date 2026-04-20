@@ -7,8 +7,7 @@ const morgan = require('morgan')
 const session = require('express-session')
 const passport = require('./config/passport')
 
-const { connectPostgres, connectMongo } = require('./config/db')
-require('./config/redis')
+const { connectPostgres } = require('./config/db')
 
 const app = express()
 
@@ -64,7 +63,6 @@ const listen = (port) => new Promise((resolve, reject) => {
 
 const start = async () => {
   await connectPostgres()
-  await connectMongo()
 
   let server
   for (const port of PORTS_TO_TRY) {

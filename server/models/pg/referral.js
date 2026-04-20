@@ -32,18 +32,69 @@ const Referral = sequelize.define('Referral', {
     }
   },
   status: {
-    type: DataTypes.ENUM('PENDING', 'ACCEPTED', 'REJECTED', 'COMPLETED'),
+    type: DataTypes.ENUM('PENDING', 'ACCEPTED', 'REJECTED', 'COMPLETED', 'WITHDRAWN'),
     defaultValue: 'PENDING',
     allowNull: false,
   },
   message: {
     type: DataTypes.TEXT,
     allowNull: true,
+    validate: {
+      len: [0, 2000]
+    }
   },
   responseMessage: {
     type: DataTypes.TEXT,
     allowNull: true,
+    validate: {
+      len: [0, 2000]
+    }
   },
+  priority: {
+    type: DataTypes.ENUM('LOW', 'NORMAL', 'HIGH', 'URGENT'),
+    defaultValue: 'NORMAL',
+    allowNull: false
+  },
+  expiresAt: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  acceptedAt: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  completedAt: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  rejectionReason: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    validate: {
+      len: [0, 500]
+    }
+  },
+  notes: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    validate: {
+      len: [0, 1000]
+    }
+  },
+  isUrgent: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: false
+  },
+  followUpRequired: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+    allowNull: false
+  },
+  followUpDate: {
+    type: DataTypes.DATE,
+    allowNull: true
+  }
 }, {
   timestamps: true,
   indexes: [
@@ -58,6 +109,30 @@ const Referral = sequelize.define('Referral', {
     },
     {
       fields: ['status']
+    },
+    {
+      fields: ['priority']
+    },
+    {
+      fields: ['expiresAt']
+    },
+    {
+      fields: ['acceptedAt']
+    },
+    {
+      fields: ['completedAt']
+    },
+    {
+      fields: ['createdAt']
+    },
+    {
+      fields: ['isUrgent']
+    },
+    {
+      fields: ['followUpRequired']
+    },
+    {
+      fields: ['followUpDate']
     },
     {
       unique: true,
