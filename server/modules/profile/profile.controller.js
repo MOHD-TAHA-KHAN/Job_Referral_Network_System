@@ -1,4 +1,4 @@
-const User = require('../../models/pg/User')
+const User = require('../../models/pg/user')
 const { Op } = require('sequelize')
 
 const getProfile = async (req, res) => {
@@ -7,7 +7,7 @@ const getProfile = async (req, res) => {
       attributes: { exclude: ['password'] }
     })
     if (!user) return res.status(404).json({ message: 'User not found' })
-      
+
     res.json({ success: true, profile: user })
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server error fetching profile' })
@@ -17,18 +17,18 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const { company, domain, skills, resumeUrl } = req.body
-    
+
     const user = await User.findByPk(req.user.id)
     if (!user) return res.status(404).json({ message: 'User not found' })
 
     // Update only allowed fields
     if (user.role === 'PROFESSIONAL' || user.role === 'HR') {
-      if (company !== undefined) user.company = company
-      if (domain !== undefined) user.domain = domain
+      if (company !== undefined) user.company = company === '' ? null : company
+      if (domain !== undefined) user.domain = domain === '' ? null : domain
     }
-    
-    if (skills !== undefined) user.skills = skills
-    if (resumeUrl !== undefined) user.resumeUrl = resumeUrl
+
+    if (skills !== undefined) user.skills = skills === '' ? null : skills
+    if (resumeUrl !== undefined) user.resumeUrl = resumeUrl === '' ? null : resumeUrl
 
     await user.save()
 

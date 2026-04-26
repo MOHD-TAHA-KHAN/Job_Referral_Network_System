@@ -72,4 +72,9 @@ api.interceptors.response.use(
 )
 
 export const googleLogin = (token) => api.post('/auth/google', { token })
+export const uploadResume = (formData) => api.post('/files/resume', formData, {
+  headers: {
+    'Content-Type': 'multipart/form-data'
+  }
+})
 export default api
