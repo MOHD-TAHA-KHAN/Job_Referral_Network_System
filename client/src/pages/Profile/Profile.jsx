@@ -1,11 +1,9 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import useAuthStore from '../../store/auth.store'
-import api from '../../services/api'
+import api, { uploadResume } from '../../services/api'
 import NetworkBackground from '../../components/NetworkBackground'
-import TiltCard from '../../components/TiltCard'
-import anime from 'animejs'
 
 const Profile = () => {
   const user = useAuthStore(state => state.user)
@@ -18,9 +16,11 @@ const Profile = () => {
     domain: '',
     resumeUrl: ''
   })
+  
   const [loading, setLoading] = useState(false)
   const [loadingData, setLoadingData] = useState(true)
-  const profileRef = useRef(null)
+  const [uploadingResume, setUploadingResume] = useState(false)
+  const [selectedFile, setSelectedFile] = useState(null)
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -41,25 +41,34 @@ const Profile = () => {
     fetchProfile()
   }, [])
 
-  useEffect(() => {
-    if (!loadingData) {
-      setTimeout(() => {
-        if (!profileRef.current) return;
-        anime({
-          targets: profileRef.current.querySelectorAll('.anime-item'),
-          translateZ: [-150, 0],
-          translateY: [40, 0],
-          opacity: [0, 1],
-          easing: 'easeOutExpo',
-          duration: 1000,
-          delay: anime.stagger(100)
-        })
-      }, 50)
-    }
-  }, [loadingData])
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0])
+    }
+  }
+
+  const handleResumeUpload = async () => {
+    // If the file is somehow not selected
+    if (!selectedFile) return;
+    setUploadingResume(true)
+    const formDataObj = new FormData()
+    formDataObj.append('resume', selectedFile)
+
+    try {
+      const { data } = await uploadResume(formDataObj)
+      setFormData(prev => ({ ...prev, resumeUrl: data.resumeUrl }))
+      updateUser({ ...user, resumeUrl: data.resumeUrl })
+      toast.success('Resume uploaded successfully!')
+      setSelectedFile(null)
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to upload resume')
+    } finally {
+      setUploadingResume(false)
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -67,12 +76,16 @@ const Profile = () => {
     setLoading(true)
     try {
       const payload = {
-        skills: formData.skills.split(',').map(s => s.trim()).filter(s => s),
-        resumeUrl: formData.resumeUrl
+        skills: formData.skills.split(',').map(s => s.trim()).filter(s => s)
       }
+      // ONLY send resumeUrl if it exists and differs, avoiding the "" error bug we discovered.
+      if (formData.resumeUrl) {
+         payload.resumeUrl = formData.resumeUrl
+      }
+      
       if (user.role === 'PROFESSIONAL' || user.role === 'HR') {
-        payload.company = formData.company
-        payload.domain = formData.domain
+        if (formData.company) payload.company = formData.company
+        if (formData.domain) payload.domain = formData.domain
       }
 
       const { data } = await api.patch('/profile', payload)
@@ -98,110 +111,113 @@ const Profile = () => {
   const isProfessional = user.role === 'PROFESSIONAL'
   const isHR = user.role === 'HR'
 
-  const roleSummary = isFresher
-    ? 'As a Fresher, your profile should highlight skills, learning goals, and why you need a referral.'
-    : isProfessional
-      ? 'As an IT Professional, your profile shows your current company, domain expertise, and referral readiness.'
-      : 'As an HR user, your profile is used to manage jobs and connect candidates with referral opportunities.'
-
   return (
     <>
-      <NetworkBackground alignment="right" />
-      <div className="dashboard-page profile-page perspective-container" ref={profileRef}>
-        <div className="dashboard-header anime-item">
+      <NetworkBackground />
+      <div className="dashboard-page profile-page fade-in">
+        <div className="dashboard-header">
           <div>
             <h1 style={{fontSize: '2.5rem', marginBottom: '8px'}}>{user.name}</h1>
             <span className={`role-badge ${user.role.toLowerCase()}`}>{user.role}</span>
           </div>
           <div className="header-actions">
             {isHR ? (
-              <Link to="/jobs" className="btn btn-primary">Manage Jobs</Link>
+              <Link to="/jobs" className="btn btn-secondary">Manage Jobs</Link>
             ) : (
-              <Link to="/jobs" className="btn btn-primary">Browse Jobs</Link>
+              <Link to="/jobs" className="btn btn-secondary">Browse Jobs</Link>
             )}
             <Link to="/referrals" className="btn btn-secondary">My Referrals</Link>
             <button onClick={logout} className="btn btn-logout">Logout</button>
           </div>
         </div>
 
-        <TiltCard className="glass-container profile-card">
-          <h2 className="anime-item">Your Profile Details</h2>
-          <div className={`role-summary anime-item ${user.role.toLowerCase()}`}>
-            {roleSummary}
-          </div>
+        <form onSubmit={handleSubmit} className="profile-bento">
+           
+           <div className="bento-card bento-full">
+              <h2>Overview</h2>
+              <div className="info-alert">
+                 {isFresher ? 'As a Fresher, your profile should highlight skills, learning goals, and why you need a referral. Upload your resume so industry professionals can easily review it.'
+                  : isProfessional ? 'As an IT Professional, your profile shows your current company, domain expertise, and referral readiness. Stay updated to help freshers effectively.'
+                  : 'As an HR, you manage jobs and coordinate referrals directly. Ensure your company info is correct so candidates recognize you.'}
+              </div>
+           </div>
 
-          {!isHR && (
-            <div className={`info-alert anime-item ${user.role.toLowerCase()}`}>
-              {isFresher && (
-                <><strong>Tip:</strong> Add your strongest skills and resume link to improve referral results.</>
-              )}
-              {isProfessional && (
-                <><strong>Tip:</strong> Keep your company and domain up to date so candidates can find the right referrer.</>
-              )}
-            </div>
-          )}
+           <div className="bento-card">
+              <h2>Skills Box</h2>
+              <div className="form-group">
+                 <label>Core Keywords (comma separated)</label>
+                 <input 
+                   type="text"
+                   name="skills"
+                   placeholder={isFresher ? 'Java, React, SQL...' : 'System Design, Node.js, AWS...'}
+                   value={formData.skills}
+                   onChange={handleChange}
+                 />
+              </div>
+              <button type="submit" disabled={loading} className="btn btn-primary" style={{ marginTop: '10px' }}>
+                {loading ? 'Saving...' : 'Save Changes'}
+              </button>
+           </div>
 
-          {isHR && (
-            <div className="info-alert anime-item hr">
-              <strong>HR Note:</strong> Add your company and domain, then use the job dashboard to post roles and review referrals.
-            </div>
-          )}
+           {(isProfessional || isHR) && (
+              <div className="bento-card">
+                 <h2>Professional Info</h2>
+                 <div className="form-group">
+                   <label>{isHR ? 'Hiring Company' : 'Company'}</label>
+                   <input 
+                     type="text"
+                     name="company"
+                     placeholder={isHR ? 'Your organization' : 'Where do you work?'}
+                     value={formData.company}
+                     onChange={handleChange}
+                   />
+                 </div>
+                 <div className="form-group" style={{ marginBottom: 0 }}>
+                   <label>{isHR ? 'Focus Area' : 'Domain'}</label>
+                   <input 
+                     type="text"
+                     name="domain"
+                     placeholder={isHR ? 'Talent Acquisition' : 'Backend Engineering'}
+                     value={formData.domain}
+                     onChange={handleChange}
+                   />
+                 </div>
+              </div>
+           )}
 
-          <form onSubmit={handleSubmit}>
-            
-            <div className="form-group anime-item">
-              <label>Skills (comma separated)</label>
-              <input 
-                type="text"
-                name="skills"
-                placeholder={isFresher ? 'e.g. JavaScript, React, SQL' : 'e.g. JavaScript, Node.js, AWS'}
-                value={formData.skills}
-                onChange={handleChange}
-              />
-            </div>
-
-            {(isProfessional || isHR) && (
-              <div className="form-row">
-                <div className="form-group anime-item">
-                  <label>{isHR ? 'Hiring Company' : 'Company'}</label>
+           <div className="bento-card bento-full">
+              <h2>Resume Document</h2>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label>Upload or Replace Active Resume (PDF only)</label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flexWrap: 'wrap', marginTop: '4px' }}>
                   <input 
-                    type="text"
-                    name="company"
-                    placeholder={isHR ? 'Your hiring organization' : 'Where do you work?'}
-                    value={formData.company}
-                    onChange={handleChange}
+                    type="file" 
+                    accept="application/pdf"
+                    onChange={handleFileChange}
+                    style={{ flex: 1, padding: '12px', background: 'var(--surface-hover)', borderRadius: '8px', color: '#fff', border: '1px solid var(--border)' }}
                   />
-                </div>
-                <div className="form-group anime-item">
-                  <label>{isHR ? 'Focus Area' : 'Domain'}</label>
-                  <input 
-                    type="text"
-                    name="domain"
-                    placeholder={isHR ? 'e.g. Talent Acquisition' : 'e.g. Backend Engineering'}
-                    value={formData.domain}
-                    onChange={handleChange}
-                  />
+                  
+                  {selectedFile && (
+                    <button 
+                      type="button" 
+                      onClick={handleResumeUpload} 
+                      disabled={uploadingResume}
+                      className="btn btn-primary"
+                    >
+                      {uploadingResume ? 'Uploading...' : 'Upload Selected File'}
+                    </button>
+                  )}
+                  
+                  {formData.resumeUrl && !selectedFile && (
+                    <a href={formData.resumeUrl} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+                      View Active Resume
+                    </a>
+                  )}
                 </div>
               </div>
-            )}
+           </div>
 
-            <div className="form-group anime-item" style={{ marginBottom: '32px' }}>
-              <label>{isFresher ? 'Resume or Portfolio Link' : 'Resume Drive Link / URL'}</label>
-              <input 
-                type="url"
-                name="resumeUrl"
-                placeholder="https://drive.google.com/..."
-                value={formData.resumeUrl}
-                onChange={handleChange}
-              />
-            </div>
-
-            <button type="submit" disabled={loading} className="btn btn-primary anime-item" style={{ maxWidth: '200px' }}>
-              {loading ? 'Saving...' : 'Save Profile'}
-            </button>
-
-          </form>
-        </TiltCard>
+        </form>
       </div>
     </>
   )

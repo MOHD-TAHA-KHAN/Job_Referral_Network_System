@@ -36,6 +36,7 @@ app.use('/api/auth', require('./modules/auth/auth.routes'))
 app.use('/api/profile', require('./modules/profile/profile.routes'))
 app.use('/api/jobs', require('./modules/jobs/jobs.routes'))
 app.use('/api/referrals', require('./modules/referral/referral.routes'))
+app.use('/api/files', require('./modules/files/files.routes'))
 
 app.get('/', (req, res) => {
   res.json({ message: 'RefNet API is running!' })
