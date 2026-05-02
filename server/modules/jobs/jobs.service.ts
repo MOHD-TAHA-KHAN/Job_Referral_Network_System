@@ -1,12 +1,34 @@
-// @ts-nocheck
 import User from '../../models/pg/user';
 import Job from '../../models/pg/job';
 
-import {  Op  } from 'sequelize';
+import {  Op, WhereOptions, fn, col  } from 'sequelize';
+import { sequelize } from '../../config/db';
 
-const createJob = async ({ title, description, company, location, requiredSkills, domain, salaryMin, salaryMax, createdBy }) => {
+export interface CreateJobDTO {
+  title: string;
+  description: string;
+  company: string;
+  location: string;
+  requiredSkills: string[];
+  domain: string;
+  salaryMin?: number;
+  salaryMax?: number;
+  createdBy: string;
+}
+
+export interface GetJobsQuery {
+  page?: number | string;
+  limit?: number | string;
+  search?: string;
+  company?: string;
+  location?: string;
+  domain?: string;
+  skills?: string[];
+}
+
+const createJob = async ({ title, description, company, location, requiredSkills, domain, salaryMin, salaryMax, createdBy }: CreateJobDTO) => {
   // Validate that the creator is an HR
-  const creator = await User.findByPk(createdBy)
+  const creator: any = await User.findByPk(createdBy)
   if (!creator || creator.role !== 'HR') {
     throw new Error('Only HR users can create jobs')
   }
@@ -26,10 +48,12 @@ const createJob = async ({ title, description, company, location, requiredSkills
   return job
 }
 
-const getAllJobs = async ({ page = 1, limit = 10, search, company, location, domain, skills }) => {
-  const offset = (page - 1) * limit
+const getAllJobs = async ({ page = 1, limit = 10, search, company, location, domain, skills }: GetJobsQuery) => {
+  const pageNum = typeof page === 'string' ? parseInt(page) : page;
+  const limitNum = typeof limit === 'string' ? parseInt(limit) : limit;
+  const offset = (pageNum - 1) * limitNum;
 
-  let whereClause = {}
+  let whereClause: any = {}
 
   // Add search filters
   if (search) {
@@ -69,7 +93,7 @@ const getAllJobs = async ({ page = 1, limit = 10, search, company, location, dom
       as: 'creator',
       attributes: ['id', 'name', 'company']
     }],
-    limit,
+    limit: limitNum,
     offset,
     order: [['createdAt', 'DESC']]
   })
@@ -78,14 +102,14 @@ const getAllJobs = async ({ page = 1, limit = 10, search, company, location, dom
     jobs: rows,
     pagination: {
       total: count,
-      page: parseInt(page),
-      limit: parseInt(limit),
-      pages: Math.ceil(count / limit)
+      page: pageNum,
+      limit: limitNum,
+      pages: Math.ceil(count / limitNum)
     }
   }
 }
 
-const getJobById = async (id) => {
+const getJobById = async (id: string) => {
   const job = await Job.findByPk(id, {
     include: [{
       model: User,
@@ -101,23 +125,23 @@ const getJobById = async (id) => {
   return job
 }
 
-const updateJob = async (id, updates, userId) => {
+const updateJob = async (id: string, updates: Partial<CreateJobDTO>, userId: string) => {
   const job = await Job.findByPk(id)
   if (!job) {
     throw new Error('Job not found')
   }
 
   // Check if user is the creator or an HR
-  const user = await User.findByPk(userId)
-  if (job.createdBy !== userId && user.role !== 'HR') {
+  const user: any = await User.findByPk(userId)
+  if ((job as any).createdBy !== userId && user.role !== 'HR') {
     throw new Error('Unauthorized to update this job')
   }
 
   // Update allowed fields
-  const allowedFields = ['title', 'description', 'company', 'location', 'requiredSkills', 'domain', 'salaryMin', 'salaryMax']
+  const allowedFields: (keyof CreateJobDTO)[] = ['title', 'description', 'company', 'location', 'requiredSkills', 'domain', 'salaryMin', 'salaryMax']
   allowedFields.forEach(field => {
     if (updates[field] !== undefined) {
-      job[field] = updates[field]
+      (job as any)[field] = updates[field]
     }
   })
 
@@ -125,15 +149,15 @@ const updateJob = async (id, updates, userId) => {
   return job
 }
 
-const deleteJob = async (id, userId) => {
+const deleteJob = async (id: string, userId: string) => {
   const job = await Job.findByPk(id)
   if (!job) {
     throw new Error('Job not found')
   }
 
   // Check if user is the creator or an HR
-  const user = await User.findByPk(userId)
-  if (job.createdBy !== userId && user.role !== 'HR') {
+  const user: any = await User.findByPk(userId)
+  if ((job as any).createdBy !== userId && user.role !== 'HR') {
     throw new Error('Unauthorized to delete this job')
   }
 
@@ -141,11 +165,39 @@ const deleteJob = async (id, userId) => {
   return { message: 'Job deleted successfully' }
 }
 
-const getJobsByCreator = async (creatorId) => {
+const getJobsByCreator = async (creatorId: string) => {
   return await Job.findAll({
     where: { createdBy: creatorId },
     order: [['createdAt', 'DESC']]
   })
+}
+
+const getJobFilters = async () => {
+  const companies = await Job.findAll({
+    attributes: [
+      [fn('DISTINCT', col('company')), 'company']
+    ],
+    where: { company: { [Op.not]: null } }
+  });
+
+  const locations = await Job.findAll({
+    attributes: [
+      [fn('DISTINCT', col('location')), 'location']
+    ],
+    where: { location: { [Op.not]: null } }
+  });
+
+  const [skillsResult] = await sequelize.query(`
+    SELECT DISTINCT unnest("requiredSkills") as skill
+    FROM "Jobs"
+    WHERE "requiredSkills" IS NOT NULL
+  `);
+
+  return {
+    companies: companies.map((c: any) => c.dataValues.company || (c as any).company).filter(Boolean),
+    locations: locations.map((l: any) => l.dataValues.location || (l as any).location).filter(Boolean),
+    skills: (skillsResult as any[]).map((s: any) => s.skill).filter(Boolean)
+  };
 }
 
 export { createJob,
@@ -153,5 +205,6 @@ export { createJob,
   getJobById,
   updateJob,
   deleteJob,
-  getJobsByCreator
+  getJobsByCreator,
+  getJobFilters
  };

@@ -131,6 +131,25 @@ const Referrals = () => {
                 </div>
                 <div className="card-body">
                   <p><strong>From:</strong> {referral.requester.name}</p>
+                  {referral.candidateMatchScore !== undefined && (
+                    <p>
+                      <strong>Match Score:</strong>{' '}
+                      <span className={`badge ${referral.candidateMatchScore >= 70 ? 'bg-success' : 'bg-warning'}`}>
+                        {referral.candidateMatchScore}%
+                      </span>
+                    </p>
+                  )}
+                  {referral.requester.skills && referral.requester.skills.length > 0 && (
+                    <p><strong>Skills:</strong> {referral.requester.skills.join(', ')}</p>
+                  )}
+                  {referral.requester.resumeUrl && (
+                    <p>
+                      <strong>Resume:</strong>{' '}
+                      <a href={referral.requester.resumeUrl} target="_blank" rel="noopener noreferrer">
+                        View Resume
+                      </a>
+                    </p>
+                  )}
                   <p><strong>Company:</strong> {referral.job.company}</p>
                   <p><strong>Location:</strong> {referral.job.location}</p>
                   {referral.message && (

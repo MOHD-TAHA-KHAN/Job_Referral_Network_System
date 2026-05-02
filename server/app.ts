@@ -12,6 +12,7 @@ import authRoutes from './modules/auth/auth.routes';
 import profileRoutes from './modules/profile/profile.routes';
 import jobsRoutes from './modules/jobs/jobs.routes';
 import referralRoutes from './modules/referral/referral.routes';
+import matchingRoutes from './modules/matching/matching.routes';
 import filesRoutes from './modules/files/files.routes';
 
 const app = express()
@@ -41,6 +42,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/profile', profileRoutes)
 app.use('/api/jobs', jobsRoutes)
 app.use('/api/referrals', referralRoutes)
+app.use('/api/match', matchingRoutes)
 app.use('/api/files', filesRoutes)
 
 app.get('/', (req: any, res: any) => {

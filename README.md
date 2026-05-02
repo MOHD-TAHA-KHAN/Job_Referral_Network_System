@@ -4,6 +4,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Node.js](https://img.shields.io/badge/Node.js-20.x-green.svg)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.x-61DAFB.svg)](https://reactjs.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
@@ -44,7 +45,7 @@ referral-network/
 │       ├── store/           # Zustand global state
 │       └── services/        # Axios API layer
 │
-└── server/                  # Express + Node.js backend
+└── server/                  # Express + Node.js backend (TypeScript)
     ├── config/              # Database and environment configuration
     ├── middleware/          # JWT auth, rate limiter, error handler
     ├── modules/
@@ -66,14 +67,14 @@ referral-network/
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **React 18** with Vite
+- **React 18** with Vite (TypeScript)
 - **React Router v6** for navigation
 - **Zustand** for global state management
 - **Axios** for API calls
 - **Socket.io-client** for real-time messaging
 
 ### Backend
-- **Node.js + Express.js** — REST API
+- **Node.js + Express.js** — REST API (TypeScript)
 - **Socket.io** — WebSocket server for real-time chat
 - **JWT** — Access + refresh token authentication
 - **bcryptjs** — Password hashing
@@ -237,7 +238,7 @@ This project uses a **dual-token JWT strategy**:
 - [x] Project scaffold & Docker setup
 - [x] Auth system (JWT + Google OAuth)
 - [x] User profiles (Fresher & Professional)
-- [ ] Job listings with search & filters
+- [x] Job listings with search & filters
 - [ ] Referral request flow
 - [ ] Smart matching algorithm
 - [ ] Real-time messaging (Socket.io)

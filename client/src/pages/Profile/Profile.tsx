@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import useAuthStore from '../../store/auth.store'
 import api, { uploadResume } from '../../services/api'
 import NetworkBackground from '../../components/NetworkBackground'
+import Dashboard from '../../components/Dashboard'
 import { User } from '../../types'
 
 const Profile = () => {
@@ -27,6 +28,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         const { data } = await api.get('/profile')
+        
         setFormData({
           skills: data.profile.skills ? data.profile.skills.join(', ') : '',
           company: data.profile.company || '',
@@ -138,6 +140,9 @@ const Profile = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="profile-bento">
+           
+           {/* MODULAR DASHBOARD STATS SECTION */}
+           <Dashboard />
            
            <div className="bento-card bento-full">
               <h2>Overview</h2>
