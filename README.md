@@ -20,6 +20,7 @@ In India, most job referrals happen through personal connections — freshers wi
 
 | Feature | Description |
 |---|---|
+| 🎨 Bento Box UI | Clean, high-contrast, minimalist grid-based interface ensuring optimal performance and usability |
 | 🔐 Auth System | JWT-based login/register with Google OAuth, role-based access (Fresher / Professional / HR) |
 | 👤 User Profiles | Detailed profiles with skills, experience, resume upload |
 | 💼 Job Listings | Browse, search, and filter job postings by role, company, and location |
@@ -236,9 +237,11 @@ This project uses a **dual-token JWT strategy**:
 ## 🗺️ Roadmap
 
 - [x] Project scaffold & Docker setup
+- [x] Full Stack TypeScript Migration
+- [x] Minimalist Bento UI Overhaul
 - [x] Auth system (JWT + Google OAuth)
 - [x] User profiles (Fresher & Professional)
-- [x] Job listings with search & filters
+- [x] Job listings with advanced search & performant filters
 - [ ] Referral request flow
 - [ ] Smart matching algorithm
 - [ ] Real-time messaging (Socket.io)
