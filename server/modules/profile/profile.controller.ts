@@ -1,5 +1,6 @@
 // @ts-nocheck
 import User from '../../models/pg/user';
+import Referral from '../../models/pg/referral';
 
 
 import {  Op  } from 'sequelize';
@@ -64,4 +65,37 @@ const getUsers = async (req: any, res: any) => {
   }
 }
 
-export { getProfile, updateProfile, getUsers  };
+const getStats = async (req: any, res: any) => {
+  try {
+    const user = await User.findByPk(req.user.id)
+    if (!user) return res.status(404).json({ message: 'User not found' })
+
+    let stats: any = {}
+
+    if (user.role === 'FRESHER') {
+      const totalSent = await Referral.count({ where: { requesterId: user.id } })
+      const accepted = await Referral.count({ where: { requesterId: user.id, status: 'ACCEPTED' } })
+      const rejected = await Referral.count({ where: { requesterId: user.id, status: 'REJECTED' } })
+      
+      stats = { totalSent, accepted, rejected }
+    } else {
+      // PROFESSIONAL or HR
+      const totalReceived = await Referral.count({ where: { referrerId: user.id } })
+      const completed = await Referral.count({ where: { referrerId: user.id, status: 'COMPLETED' } })
+      const pending = await Referral.count({ where: { referrerId: user.id, status: 'PENDING' } })
+      
+      stats = { 
+        totalReceived, 
+        completed, 
+        pending,
+        successRate: user.referralSuccessRate 
+      }
+    }
+
+    res.json({ success: true, stats })
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: 'Server error fetching stats' })
+  }
+}
+
+export { getProfile, updateProfile, getUsers, getStats };

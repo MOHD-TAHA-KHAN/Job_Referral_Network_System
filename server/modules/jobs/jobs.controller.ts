@@ -1,8 +1,12 @@
-// @ts-nocheck
-
+import { Request, Response } from 'express';
 import * as jobsService from './jobs.service';
 
-const createJob = async (req: any, res: any) => {
+// Interface for authenticated requests
+export interface AuthRequest extends Request {
+  user?: any; // Replace with proper User interface if available
+}
+
+const createJob = async (req: AuthRequest, res: Response) => {
   try {
     const jobData = {
       ...req.body,
@@ -23,7 +27,7 @@ const createJob = async (req: any, res: any) => {
   }
 }
 
-const getAllJobs = async (req: any, res: any) => {
+const getAllJobs = async (req: Request, res: Response) => {
   try {
     const {
       page = 1,
@@ -46,13 +50,13 @@ const getAllJobs = async (req: any, res: any) => {
     }
 
     const result = await jobsService.getAllJobs({
-      page: parseInt(page),
-      limit: parseInt(limit),
-      search,
-      company,
-      location,
-      domain,
-      skills: parsedSkills
+      page: typeof page === 'string' ? parseInt(page) : (page as number),
+      limit: typeof limit === 'string' ? parseInt(limit) : (limit as number),
+      search: search as string,
+      company: company as string,
+      location: location as string,
+      domain: domain as string,
+      skills: parsedSkills as string[]
     })
 
     res.json({
@@ -67,9 +71,9 @@ const getAllJobs = async (req: any, res: any) => {
   }
 }
 
-const getJobById = async (req: any, res: any) => {
+const getJobById = async (req: Request, res: Response) => {
   try {
-    const job = await jobsService.getJobById(req.params.id)
+    const job = await jobsService.getJobById(req.params.id as string)
     res.json({
       success: true,
       job
@@ -83,9 +87,9 @@ const getJobById = async (req: any, res: any) => {
   }
 }
 
-const updateJob = async (req: any, res: any) => {
+const updateJob = async (req: AuthRequest, res: Response) => {
   try {
-    const job = await jobsService.updateJob(req.params.id, req.body, req.user.id)
+    const job = await jobsService.updateJob(req.params.id as string, req.body, req.user.id)
     res.json({
       success: true,
       job,
@@ -101,9 +105,9 @@ const updateJob = async (req: any, res: any) => {
   }
 }
 
-const deleteJob = async (req: any, res: any) => {
+const deleteJob = async (req: AuthRequest, res: Response) => {
   try {
-    const result = await jobsService.deleteJob(req.params.id, req.user.id)
+    const result = await jobsService.deleteJob(req.params.id as string, req.user.id)
     res.json({
       success: true,
       message: result.message
@@ -118,7 +122,7 @@ const deleteJob = async (req: any, res: any) => {
   }
 }
 
-const getMyJobs = async (req: any, res: any) => {
+const getMyJobs = async (req: AuthRequest, res: Response) => {
   try {
     const jobs = await jobsService.getJobsByCreator(req.user.id)
     res.json({
@@ -133,10 +137,26 @@ const getMyJobs = async (req: any, res: any) => {
   }
 }
 
+const getJobFiltersMetadata = async (req: Request, res: Response) => {
+  try {
+    const filters = await jobsService.getJobFilters()
+    res.json({
+      success: true,
+      filters
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error fetching job filters metadata'
+    })
+  }
+}
+
 export { createJob,
   getAllJobs,
   getJobById,
   updateJob,
   deleteJob,
-  getMyJobs
+  getMyJobs,
+  getJobFiltersMetadata
  };

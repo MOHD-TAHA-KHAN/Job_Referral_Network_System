@@ -14,11 +14,25 @@ const Jobs = () => {
     skills: '',
     location: ''
   })
-
+  const [filterMetadata, setFilterMetadata] = useState({
+    companies: [] as string[],
+    skills: [] as string[],
+    locations: [] as string[]
+  })
 
   useEffect(() => {
     loadJobs()
-  }, [filters])
+    loadFilterMetadata()
+  }, []) // Remove 'filters' from dependency array to stop auto-refresh
+
+  const loadFilterMetadata = async () => {
+    try {
+      const response = await api.get('/jobs/metadata/filters')
+      setFilterMetadata(response.data.filters)
+    } catch (error) {
+      console.error('Failed to load filter suggestions')
+    }
+  }
 
   const loadJobs = async () => {
     try {
@@ -82,29 +96,59 @@ const Jobs = () => {
             <input
               type="text"
               name="company"
+              list="companies-list"
               placeholder="Filter by company..."
               value={filters.company}
               onChange={handleFilterChange}
             />
+            <datalist id="companies-list">
+              {filterMetadata.companies.map((c, i) => <option key={i} value={c} />)}
+            </datalist>
+
             <input
               type="text"
               name="skills"
+              list="skills-list"
               placeholder="Filter by skills (comma separated)..."
               value={filters.skills}
               onChange={handleFilterChange}
             />
+            <datalist id="skills-list">
+              {filterMetadata.skills.map((s, i) => <option key={i} value={s} />)}
+            </datalist>
+
             <input
               type="text"
               name="location"
+              list="locations-list"
               placeholder="Filter by location..."
               value={filters.location}
               onChange={handleFilterChange}
             />
+            <datalist id="locations-list">
+              {filterMetadata.locations.map((l, i) => <option key={i} value={l} />)}
+            </datalist>
+
             <button
-              onClick={() => setFilters({ company: '', skills: '', location: '' })}
+              onClick={() => loadJobs()}
+              className="btn-primary"
+              style={{ padding: '0.75rem 1rem', whiteSpace: 'nowrap' }}
+            >
+              Apply Filters
+            </button>
+            <button
+              onClick={() => {
+                setFilters({ company: '', skills: '', location: '' });
+                // We need to wait for state to update before loading jobs.
+                // A clean way is to just call loadJobs without filters.
+                // We can't guarantee state is updated immediately.
+                setTimeout(() => {
+                   document.querySelector<HTMLButtonElement>('.btn-primary')?.click()
+                }, 0)
+              }}
               className="btn-clear"
             >
-              Clear Filters
+              Clear
             </button>
           </div>
         </div>
