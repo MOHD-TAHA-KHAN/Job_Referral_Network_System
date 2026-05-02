@@ -35,6 +35,7 @@ export interface Referral {
   status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
   message?: string;
   responseMessage?: string;
+  candidateMatchScore?: number;
   createdAt: string;
   updatedAt?: string;
 }

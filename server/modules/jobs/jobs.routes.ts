@@ -6,11 +6,13 @@ import {
   getJobById,
   updateJob,
   deleteJob,
-  getMyJobs
+  getMyJobs,
+  getJobFiltersMetadata
  } from './jobs.controller';
 import {  protect  } from '../../middleware/auth';
 
 // Public routes
+router.get('/metadata/filters', getJobFiltersMetadata)
 router.get('/', getAllJobs)
 router.get('/:id', getJobById)
 

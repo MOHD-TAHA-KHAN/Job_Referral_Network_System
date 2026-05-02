@@ -1,8 +1,11 @@
-// @ts-nocheck
-
+import { Request, Response } from 'express';
 import * as referralService from './referral.service';
 
-const createReferral = async (req: any, res: any) => {
+export interface AuthRequest extends Request {
+  user?: any;
+}
+
+const createReferral = async (req: AuthRequest, res: Response) => {
   try {
     const { jobId, referrerId, message } = req.body
     const requesterId = req.user.id
@@ -27,10 +30,13 @@ const createReferral = async (req: any, res: any) => {
   }
 }
 
-const getMyReferrals = async (req: any, res: any) => {
+const getMyReferrals = async (req: AuthRequest, res: Response) => {
   try {
     const { status, type } = req.query
-    const referrals = await referralService.getReferralsForUser(req.user.id, { status, type })
+    const referrals = await referralService.getReferralsForUser(req.user.id, { 
+      status: status as string, 
+      type: type as string 
+    })
 
     res.json({
       success: true,
@@ -44,9 +50,9 @@ const getMyReferrals = async (req: any, res: any) => {
   }
 }
 
-const getReferralById = async (req: any, res: any) => {
+const getReferralById = async (req: AuthRequest, res: Response) => {
   try {
-    const referral = await referralService.getReferralById(req.params.id, req.user.id)
+    const referral = await referralService.getReferralById(req.params.id as string, req.user.id)
     res.json({
       success: true,
       referral
@@ -61,10 +67,10 @@ const getReferralById = async (req: any, res: any) => {
   }
 }
 
-const updateReferralStatus = async (req: any, res: any) => {
+const updateReferralStatus = async (req: AuthRequest, res: Response) => {
   try {
     const { status, responseMessage } = req.body
-    const referral = await referralService.updateReferralStatus(req.params.id, req.user.id, {
+    const referral = await referralService.updateReferralStatus(req.params.id as string, req.user.id, {
       status,
       responseMessage
     })
@@ -84,9 +90,9 @@ const updateReferralStatus = async (req: any, res: any) => {
   }
 }
 
-const getReferralsForJob = async (req: any, res: any) => {
+const getReferralsForJob = async (req: AuthRequest, res: Response) => {
   try {
-    const referrals = await referralService.getReferralsForJob(req.params.jobId, req.user.id)
+    const referrals = await referralService.getReferralsForJob(req.params.jobId as string, req.user.id)
     res.json({
       success: true,
       referrals
