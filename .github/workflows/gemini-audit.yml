@@ -1,0 +1,24 @@
+name: Gemini Repo Auditor
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1' # Every Monday
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Gemini Audit
+        uses: google-github-actions/gemini-review@v1
+        with:
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          model: "gemini-1.5-pro"
+          # Custom instructions for your MERN stack
+          instructions: |
+            Analyze this MERN stack repository. 
+            Identify bugs in Express controllers, MongoDB schemas, or PostgreSQL queries.
+            Look for missing error handling or security flaws in auth middleware.
+            Output your findings as a list of issues to be solved.
