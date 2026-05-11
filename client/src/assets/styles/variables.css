@@ -1,0 +1,21 @@
+:root, 
+[data-collection-2-3-mode="parameter"] {
+  /* Parameter */
+  --text-secondary: rgba(107, 114, 128, 1);
+  --text-primary: rgba(17, 24, 39, 1);
+  --text-on-dark: rgba(255, 255, 255, 1);
+  --bg-white: rgba(255, 255, 255, 1);
+  --brand-primary-light: rgba(238, 241, 254, 1);
+  --border-light: rgba(229, 231, 235, 1);
+  --bg-sidebar: rgba(30, 42, 74, 1);
+  --border-mid: rgba(209, 213, 219, 1);
+  --text-muted: rgba(156, 163, 175, 1);
+  --brand-primary: rgba(79, 110, 247, 1);
+  --brand-danger: rgba(239, 68, 68, 1);
+  --brand-accent-light: rgba(209, 250, 229, 1);
+  --bg-page: rgba(243, 244, 248, 1);
+  --brand-accent: rgba(16, 185, 129, 1);
+  --brand-warning: rgba(245, 158, 11, 1);
+  --brand-warning-light: rgba(254, 243, 199, 1);
+}
+

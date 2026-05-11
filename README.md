@@ -33,6 +33,37 @@ In India, most job referrals happen through personal connections — freshers wi
 
 ---
 
+## 🚀 Quick Start
+
+### **Prerequisites:**
+- Node.js 18+ & npm 9+
+- Docker 20+ (for PostgreSQL)
+- Git
+
+### **One-Command Setup:**
+```bash
+git clone https://github.com/MOHD-TAHA-KHAN/Job_Referral_Network_System.git
+cd Job_Referral_Network_System
+docker-compose up -d
+cd server && npm install && cp .env.example .env
+cd ../client && npm install && cp .env.example .env
+```
+
+### **Start Development:**
+```bash
+# Terminal 1: Backend
+cd server && npm run dev
+
+# Terminal 2: Frontend  
+cd client && npm run dev
+```
+
+**Access:** Frontend: http://localhost:5173 | Backend: http://localhost:5000
+
+📖 **For detailed setup instructions, see [SETUP.md](./SETUP.md)**
+
+---
+
 ## 🏗️ Architecture
 
 This project uses a **Monolithic Architecture** — a deliberate choice for a solo portfolio project that keeps the codebase simple, easy to run locally, and straightforward to deploy.
@@ -45,7 +76,7 @@ referral-network/
 │       ├── components/      # Reusable UI components
 │       ├── store/           # Zustand global state
 │       └── services/        # Axios API layer
-│
+
 └── server/                  # Express + Node.js backend (TypeScript)
     ├── config/              # Database and environment configuration
     ├── middleware/          # JWT auth, rate limiter, error handler

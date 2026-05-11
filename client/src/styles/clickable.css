@@ -1,0 +1,38 @@
+.clickable {
+  transition: all 0.2s ease;
+}
+
+.clickable:hover {
+  opacity: 0.8;
+  transform: translateY(-1px);
+}
+
+.Pixso-paragraph-2_49.clickable:hover,
+.Pixso-paragraph-2_50.clickable:hover,
+.Pixso-paragraph-2_51.clickable:hover,
+.Pixso-paragraph-2_52.clickable:hover {
+  color: #3b82f6 !important;
+}
+
+.stroke-wrapper-2_54.clickable:hover {
+  background-color: #f8fafc;
+}
+
+#2_55.clickable:hover {
+  background-color: #3b82f6;
+}
+
+#2_55.clickable:hover .Pixso-paragraph-2_56 {
+  color: white !important;
+}
+
+/* How it works section hover effects */
+.Pixso-frame-2_105:hover,
+.Pixso-frame-2_112:hover,
+.Pixso-frame-2_121:hover,
+.Pixso-frame-2_128:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}

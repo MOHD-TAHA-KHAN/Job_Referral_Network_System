@@ -1,0 +1,32 @@
+/* Pages with no nav: fill full viewport, no extra wrappers */
+.layout-full {
+  display: contents; /* transparent — children render as if Layout doesn't exist */
+}
+
+/* Pages with nav bar */
+.layout-with-nav {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.layout-main {
+  flex: 1;
+  width: 100%;
+}
+
+.layout-main.with-nav {
+  margin-top: 64px;
+}
+
+.layout-main.full-width {
+  margin-top: 0;
+  /* Let the page itself control height/overflow */
+  display: contents;
+}
+
+@media (max-width: 768px) {
+  .layout-main.with-nav {
+    margin-top: 120px;
+  }
+}

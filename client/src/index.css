@@ -1,312 +1,61 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-:root {
-  /* Pitch Black Theme */
-  --bg-color: #000000;
-  --surface: #0a0a0a;
-  --surface-hover: #121212;
-  --surface-elevated: #111111;
-  --primary: #ffffff;
-  --primary-hover: #e5e5e5;
-  --primary-text: #000000;
-  --accent: #2563eb;
-  --accent-hover: #1d4ed8;
-  --text-main: #EDEDED;
-  --text-muted: #A1A1AA;
-  --error: #ef4444;
-  --border: #27272a;
-  --border-hover: #3f3f46;
-}
-
-* {
-  box-sizing: border-box;
+*, *::before, *::after {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
 }
 
 body {
-  font-family: 'Inter', -apple-system, sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-main);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 #root {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  z-index: 10;
-}
-
-a {
-  color: var(--accent);
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
-
-a:hover {
-  color: #60a5fa;
-}
-
-/* Bento Cards (Replacing Glassmorphism) */
-.bento-card, .glass-container {
-  background-color: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-  transition: border-color 0.2s ease, transform 0.2s ease;
-}
-
-/* Forms */
-.form-group {
-  margin-bottom: 20px;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.form-group label {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-
-.form-group input, 
-.form-group select {
+/* ── Fix Pixso scroll-container (landing page) ─────────── */
+.scroll-container {
+  height: auto !important;
+  min-height: 100%;
   width: 100%;
-  padding: 12px 16px;
-  background-color: var(--bg-color);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text-main);
-  font-family: 'Inter', sans-serif;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
+  overflow: visible !important;
 }
 
-.form-group input:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: var(--text-muted);
-  background-color: var(--surface-hover);
+/* Fix Pixso fixed-height root frames */
+[class^="Pixso-frame-2_37"],
+[class^="Pixso-frame-2_371"],
+[class^="Pixso-frame-2_1259"],
+[class^="Pixso-frame-2_985"],
+[class^="Pixso-frame-2_890"],
+[class^="Pixso-frame-2_669"],
+[class^="Pixso-frame-2_562"],
+[class^="Pixso-frame-2_209"] {
+  height: auto !important;
+  min-height: 900px;
+  overflow: visible !important;
 }
 
-.form-row {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.form-row .form-group {
-  flex: 1;
-  min-width: 220px;
+/* ── App shell pages fill full viewport ────────────────── */
+.app-shell {
+  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-family: inherit;
-  font-weight: 500;
-  font-size: 0.9rem;
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: all 0.15s ease;
-  width: auto;
-  letter-spacing: 0.01em;
+.app-main {
+  height: 100vh;
+  overflow-y: auto;
 }
 
-.btn-primary {
-  background-color: var(--primary);
-  color: var(--primary-text);
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-hover);
-  transform: scale(0.98);
-}
-
-.btn-secondary {
-  background-color: transparent;
-  color: var(--text-main);
-  border: 1px solid var(--border);
-}
-
-.btn-secondary:hover {
-  background-color: var(--surface-hover);
-  border-color: var(--border-hover);
-}
-
-.btn-logout {
-  background-color: transparent;
-  color: var(--error);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.btn-logout:hover {
-  background-color: rgba(239, 68, 68, 0.1);
-  border-color: var(--error);
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Google Sign In Button */
-.google-btn {
-  background-color: var(--surface-elevated);
-  color: var(--text-main);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 8px;
-  font-weight: 500;
-  cursor: pointer;
-  width: 100%;
-  transition: all 0.15s ease;
-}
-
-.google-btn:hover {
-  background-color: var(--border);
-}
-
-/* Layouts */
-.auth-page {
+/* ── Auth / full-screen pages ──────────────────────────── */
+.auth-fullscreen {
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
-
-.auth-card {
-  width: 100%;
-  max-width: 420px;
-  padding: 40px;
-  background-color: var(--surface);
-}
-
-.auth-card h1 {
-  font-size: 1.8rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  margin-bottom: 8px;
-}
-
-.auth-card p.subtitle {
-  color: var(--text-muted);
-  margin-bottom: 32px;
-  font-size: 0.95rem;
-}
-
-.dashboard-page {
-  padding: 60px 24px;
-  max-width: 1000px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 40px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--border);
-}
-
-.header-actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-/* Profile Bento Grid */
-.profile-bento {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-}
-@media (min-width: 768px) {
-  .profile-bento {
-    grid-template-columns: 1fr 1fr;
-  }
-  .bento-full {
-    grid-column: 1 / -1;
-  }
-}
-
-.bento-card {
-  padding: 24px;
-}
-
-.bento-card h2 {
-  font-size: 1.25rem;
-  font-weight: 500;
-  margin-bottom: 16px;
-  color: var(--text-main);
-  letter-spacing: -0.01em;
-}
-
-.role-badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background-color: var(--surface-hover);
-  color: var(--text-muted);
-  border: 1px solid var(--border);
-  text-transform: uppercase;
-}
-
-.info-alert {
-  background-color: var(--surface-elevated);
-  border: 1px solid var(--border);
-  padding: 16px;
-  border-radius: 8px;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-/* Animated Fade In (Replacing heavy anime.js) */
-.fade-in {
-  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Minimal Gradient Background */
-.minimal-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.08) 0%, rgba(0, 0, 0, 0) 50%);
-  pointer-events: none;
 }

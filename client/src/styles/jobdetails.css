@@ -1,0 +1,305 @@
+/* ── Job Details Page ───────────────────────────────────── */
+.jd-page {
+  display: flex;
+  min-height: 100vh;
+  background: #0f0f0f;
+  font-family: 'Inter', sans-serif;
+  color: #fff;
+}
+
+.jd-loading-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #0f0f0f;
+  color: #555;
+  font-family: 'Inter', sans-serif;
+}
+
+.jd-main {
+  flex: 1;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  max-width: 900px;
+}
+
+.jd-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #1a1a1a;
+  border: 1px solid #6c63ff;
+  color: #a89fff;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 14px;
+  z-index: 1000;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.jd-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #666;
+}
+
+.jd-back {
+  background: none;
+  border: none;
+  color: #6c63ff;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  padding: 0;
+}
+
+.jd-back:hover { text-decoration: underline; }
+.jd-breadcrumb-sep { color: #333; }
+.jd-breadcrumb-current { color: #888; }
+
+/* Job card */
+.jd-job-card {
+  background: #1a1a1a;
+  border: 1px solid #222;
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.jd-job-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.jd-job-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: #6c63ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.jd-job-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.jd-job-meta {
+  font-size: 13px;
+  color: #888;
+  margin: 4px 0 8px;
+}
+
+.jd-job-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.jd-job-desc h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ccc;
+  margin: 0 0 8px;
+}
+
+.jd-job-desc p {
+  font-size: 14px;
+  color: #888;
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* Referrers section */
+.jd-referrers-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.jd-referrers-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.jd-referrers-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.jd-referrers-sub {
+  font-size: 13px;
+  color: #666;
+  margin: 4px 0 0;
+}
+
+.jd-match-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(108, 99, 255, 0.08);
+  border: 1px solid rgba(108, 99, 255, 0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #a89fff;
+}
+
+.jd-loading,
+.jd-empty {
+  color: #555;
+  font-size: 14px;
+  text-align: center;
+  padding: 32px 0;
+}
+
+.jd-referrers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.jd-referrer-card {
+  background: #1a1a1a;
+  border: 1px solid #222;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.jd-referrer-card:hover { border-color: #6c63ff; }
+
+.jd-top-match-badge {
+  background: rgba(108, 99, 255, 0.12);
+  border-bottom: 1px solid rgba(108, 99, 255, 0.2);
+  color: #a89fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 16px;
+}
+
+.jd-referrer-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  gap: 16px;
+}
+
+.jd-referrer-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.jd-referrer-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.jd-referrer-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.jd-referrer-role {
+  font-size: 13px;
+  color: #888;
+  margin: 3px 0 6px;
+}
+
+.jd-referrer-stats {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.jd-referrer-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.jd-referrer-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.jd-match-score {
+  font-size: 12px;
+  background: rgba(52, 211, 153, 0.1);
+  color: #34d399;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-weight: 600;
+}
+
+.jd-request-btn {
+  background: #6c63ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.jd-request-btn:hover:not(:disabled) { background: #5a52e0; }
+
+.jd-request-btn.sent {
+  background: rgba(52, 211, 153, 0.12);
+  color: #34d399;
+  cursor: default;
+}
+
+.jd-request-btn:disabled:not(.sent) { opacity: 0.6; cursor: not-allowed; }
+
+@media (max-width: 768px) {
+  .jd-main { padding: 20px 16px; }
+  .jd-referrer-body { flex-direction: column; align-items: flex-start; }
+  .jd-referrer-right { align-items: flex-start; }
+}

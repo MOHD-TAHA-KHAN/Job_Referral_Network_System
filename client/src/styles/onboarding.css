@@ -1,0 +1,101 @@
+/* ── Onboarding ─────────────────────────────────────────── */
+.onboarding-container { max-width: 500px; }
+
+.onboarding-card { gap: 24px; }
+
+.onboarding-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+.onboarding-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  flex: 1;
+}
+
+.onboarding-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: #222;
+  z-index: 0;
+}
+
+.onboarding-step.done:not(:last-child)::after { background: #6c63ff; }
+
+.onboarding-step-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #222;
+  border: 2px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #555;
+  position: relative;
+  z-index: 1;
+  transition: all 0.2s;
+}
+
+.onboarding-step.done .onboarding-step-dot {
+  background: #6c63ff;
+  border-color: #6c63ff;
+  color: #fff;
+}
+
+.onboarding-step span {
+  font-size: 11px;
+  color: #555;
+}
+
+.onboarding-step.done span { color: #a89fff; }
+
+/* Skills grid */
+.skills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-chip {
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid #333;
+  background: #111;
+  color: #888;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.skill-chip.selected {
+  border-color: #6c63ff;
+  background: rgba(108, 99, 255, 0.12);
+  color: #a89fff;
+}
+
+.skill-chip:hover:not(.selected) { border-color: #555; color: #ccc; }
+
+.onboarding-nav {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.profile-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
