@@ -46,7 +46,7 @@ export const authService = {
 
   async getMe(): Promise<AuthUser> {
     const response = await api.get('/auth/me');
-    return response.data;
+    return response.data.user;
   },
 
   async refreshToken(): Promise<{ token: string }> {
@@ -57,7 +57,7 @@ export const authService = {
   // Google OAuth
   async getGoogleAuthUrl(): Promise<string> {
     // This should be constructed on frontend or returned from backend
-    return `${import.meta.env.VITE_API_URL.replace('/api', '')}/auth/google`;
+    return `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/google`;
   },
 
   async handleGoogleCallback(token: string): Promise<AuthResponse> {

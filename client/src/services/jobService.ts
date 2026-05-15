@@ -24,7 +24,7 @@ export interface JobFilters {
 export const jobService = {
   async getAllJobs(filters?: JobFilters): Promise<Job[]> {
     const response = await api.get('/jobs', { params: filters });
-    return response.data;
+    return response.data.jobs || [];
   },
 
   async getJobById(id: string): Promise<Job> {

@@ -39,7 +39,7 @@ export interface ReferralMatch {
 export const referralService = {
   async getMyReferrals(): Promise<Referral[]> {
     const response = await api.get('/referrals/my-referrals');
-    return response.data;
+    return response.data.referrals || [];
   },
 
   async getReferralById(id: string): Promise<Referral> {
@@ -70,6 +70,6 @@ export const referralService = {
   // Referral inbox (for professionals who received requests)
   async getReferralInbox(): Promise<Referral[]> {
     const response = await api.get('/referrals/my-referrals');
-    return response.data;
+    return response.data.referrals || [];
   },
 };

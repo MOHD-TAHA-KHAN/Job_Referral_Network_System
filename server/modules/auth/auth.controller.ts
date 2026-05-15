@@ -16,7 +16,7 @@ const register = async (req: any, res: any) => {
   try {
     const result = await authService.register(req.body)
     setTokenCookie(res, result.refreshToken)
-    res.status(201).json({ success: true, user: result.user, accessToken: result.accessToken })
+    res.status(201).json({ success: true, user: result.user, token: result.accessToken })
   } catch (err: any) {
     res.status(400).json({ success: false, message: err.message })
   }
@@ -26,7 +26,7 @@ const login = async (req: any, res: any) => {
   try {
     const result = await authService.login(req.body)
     setTokenCookie(res, result.refreshToken)
-    res.status(200).json({ success: true, user: result.user, accessToken: result.accessToken })
+    res.status(200).json({ success: true, user: result.user, token: result.accessToken })
   } catch (err: any) {
     res.status(401).json({ success: false, message: err.message })
   }
@@ -49,7 +49,7 @@ const refresh = async (req: any, res: any) => {
       { expiresIn: '15m' }
     )
     
-    res.json({ success: true, accessToken })
+    res.json({ success: true, token: accessToken })
   } catch (err: any) {
     res.status(403).json({ message: 'Invalid or expired refresh token' })
   }

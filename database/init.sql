@@ -16,6 +16,10 @@ CREATE TABLE IF NOT EXISTS users (
     domain VARCHAR(100) CHECK (LENGTH(domain) >= 2),
     skills TEXT[] DEFAULT '{}',
     resume_url VARCHAR(500) CHECK (resume_url ~* '^https?://'),
+    bio TEXT,
+    position VARCHAR(255),
+    education VARCHAR(255),
+    linkedin_url VARCHAR(500),
     referral_success_rate DECIMAL(5,2) DEFAULT 0.0 CHECK (referral_success_rate >= 0 AND referral_success_rate <= 100),
     is_active BOOLEAN DEFAULT true NOT NULL,
     last_login TIMESTAMP,
@@ -92,6 +96,38 @@ CREATE UNLOGGED TABLE IF NOT EXISTS general_cache (
 );
 
 -- Indexes for optimal performance
+-- Experience table
+CREATE TABLE IF NOT EXISTS experiences (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL CHECK (LENGTH(title) >= 2),
+    company VARCHAR(255) NOT NULL CHECK (LENGTH(company) >= 2),
+    location VARCHAR(255),
+    start_date TIMESTAMP NOT NULL,
+    end_date TIMESTAMP,
+    is_current BOOLEAN DEFAULT false,
+    description TEXT,
+    skills TEXT[] DEFAULT '{}',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+-- Projects table
+CREATE TABLE IF NOT EXISTS projects (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL CHECK (LENGTH(title) >= 2),
+    description TEXT,
+    start_date TIMESTAMP,
+    end_date TIMESTAMP,
+    github_url VARCHAR(500) CHECK (github_url ~* '^https?://'),
+    demo_url VARCHAR(500) CHECK (demo_url ~* '^https?://'),
+    skills TEXT[] DEFAULT '{}',
+    is_from_github BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
 -- Users indexes
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
@@ -99,6 +135,12 @@ CREATE INDEX IF NOT EXISTS idx_users_domain ON users(domain);
 CREATE INDEX IF NOT EXISTS idx_users_company ON users(company);
 CREATE INDEX IF NOT EXISTS idx_users_active ON users(is_active);
 CREATE INDEX IF NOT EXISTS idx_users_skills_gin ON users USING GIN(skills);
+
+-- Experience indexes
+CREATE INDEX IF NOT EXISTS idx_experiences_user_id ON experiences(user_id);
+
+-- Projects indexes
+CREATE INDEX IF NOT EXISTS idx_projects_user_id ON projects(user_id);
 
 -- Jobs indexes
 CREATE INDEX IF NOT EXISTS idx_jobs_company ON jobs(company);
@@ -151,6 +193,12 @@ CREATE TRIGGER update_jobs_updated_at BEFORE UPDATE ON jobs
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_referrals_updated_at BEFORE UPDATE ON referrals
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_experiences_updated_at BEFORE UPDATE ON experiences
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_projects_updated_at BEFORE UPDATE ON projects
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Full-text search trigger for jobs

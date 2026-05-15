@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { useAuthStore } from '../store/useAuthStore';
-import MockOAuthButton from '../components/MockOAuthButton';
+
 import '../styles/design-system.css';
 
 type Role = 'Fresher' | 'Professional' | 'HR / Company';
@@ -16,10 +16,22 @@ const LoginPage = () => {
   useEffect(() => { if (isAuthenticated) navigate('/dashboard', { replace: true }); }, [isAuthenticated, navigate]);
   useEffect(() => () => clearError(), [clearError]);
 
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   try { await login(email, password); navigate('/dashboard'); } catch { /* error in store */ }
+  // };
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try { await login(email, password); navigate('/dashboard'); } catch { /* error in store */ }
-  };
+  e.preventDefault();
+  try {
+    // 1. Pass the role to your login function so the backend can validate it
+    await login(email, password, role); 
+    
+    // 2. REMOVE navigate('/dashboard') from here. 
+    // Let the useEffect handle the navigation once isAuthenticated becomes true.
+  } catch (err) {
+    console.error("Login failed:", err);
+  }
+};
 
   
   return (
@@ -91,8 +103,16 @@ const LoginPage = () => {
             </div>
           )}
 
-          {/* Google OAuth - Mock for Testing */}
-          <MockOAuthButton />
+          {/* Google OAuth */}
+          <button type="button" onClick={() => window.location.href = `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/google`} style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+            width: '100%', padding: '11px', border: '1.5px solid var(--border)',
+            borderRadius: 10, background: '#fff', fontSize: 14, fontWeight: 500,
+            cursor: 'pointer', fontFamily: 'var(--font)', marginBottom: 16,
+          }}>
+            <span style={{ width: 20, height: 20, background: '#ea4335', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 11, fontWeight: 700, flexShrink: 0 }}>G</span>
+            Continue with Google
+          </button>
 
           {/* Divider */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, color: 'var(--text-muted)', fontSize: 12, marginBottom: 16 }}>

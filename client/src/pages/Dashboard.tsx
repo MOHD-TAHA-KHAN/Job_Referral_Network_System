@@ -75,7 +75,7 @@ const Dashboard = () => {
         {/* Header */}
         <div className="page-header" style={{ paddingBottom: 20 }}>
           <div>
-            <h1 className="page-title">Welcome back, {user?.name?.split(' ')[0] ?? 'Priya'} 👋</h1>
+            <h1 className="page-title">Welcome back, {user?.name?.split(' ')[0] ?? 'User'} 👋</h1>
             <p className="page-subtitle">Here's what's happening with your referrals today</p>
           </div>
           <div className="header-actions">

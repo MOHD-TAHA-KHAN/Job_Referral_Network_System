@@ -7,7 +7,7 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string, role?: string) => Promise<void>;
   signup: (name: string, email: string, password: string, role?: string) => Promise<void>;
   logout: () => Promise<void>;
   clearError: () => void;
@@ -21,10 +21,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isLoading: false,
   error: null,
 
-  login: async (email, password) => {
+  login: async (email, password , role) => {
     set({ isLoading: true, error: null });
     try {
-      const { user, token } = await authService.login({ email, password });
+      const { user, token } = await authService.login({ 
+          email, 
+          password, 
+          role: role ? role.split(' ')[0].toUpperCase() : 'FRESHER'
+        });
       localStorage.setItem('authToken', token);
       set({ user, token, isAuthenticated: true, isLoading: false });
     } catch (err: unknown) {
@@ -39,7 +43,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   signup: async (name, email, password, role = 'fresher') => {
     set({ isLoading: true, error: null });
     try {
-      const { user, token } = await authService.signup({ name, email, password, role: role as 'fresher' | 'professional' });
+      const { user, token } = await authService.signup({ 
+        name, email, password, 
+        role: (role ? role.split(' ')[0].toUpperCase() : 'FRESHER') as 'fresher' | 'professional' // Casting for TS, server will handle it
+      });
       localStorage.setItem('authToken', token);
       set({ user, token, isAuthenticated: true, isLoading: false });
     } catch (err: unknown) {

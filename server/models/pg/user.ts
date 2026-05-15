@@ -11,6 +11,10 @@ export interface UserInstance extends Model {
   domain?: string;
   skills?: string[];
   resumeUrl?: string;
+  bio?: string;
+  position?: string;
+  education?: string;
+  linkedinUrl?: string;
   referralSuccessRate?: number;
   isActive?: boolean;
   lastLogin?: Date;
@@ -70,6 +74,32 @@ const User = sequelize.define('User', {
   },
   resumeUrl: {
     type: DataTypes.STRING,
+    allowNull: true,
+    validate: {
+      isUrl: true
+    }
+  },
+  bio: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  position: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    validate: {
+      len: [2, 255]
+    }
+  },
+  education: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    validate: {
+      len: [2, 255]
+    }
+  },
+  linkedinUrl: {
+    type: DataTypes.STRING,
+    field: 'linkedin_url',
     allowNull: true,
     validate: {
       isUrl: true
@@ -141,6 +171,18 @@ const User = sequelize.define('User', {
   User.hasMany(models.Referral, {
     foreignKey: 'referrerId',
     as: 'receivedReferrals'
+  })
+
+  // Users can have multiple experiences
+  User.hasMany(models.Experience, {
+    foreignKey: 'userId',
+    as: 'experiences'
+  })
+
+  // Users can have multiple projects
+  User.hasMany(models.Project, {
+    foreignKey: 'userId',
+    as: 'projects'
   })
 }
 

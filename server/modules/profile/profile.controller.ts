@@ -1,6 +1,8 @@
 // @ts-nocheck
 import User from '../../models/pg/user';
 import Referral from '../../models/pg/referral';
+import Experience from '../../models/pg/experience';
+import Project from '../../models/pg/project';
 
 
 import {  Op  } from 'sequelize';
@@ -12,27 +14,124 @@ const getProfile = async (req: any, res: any) => {
     })
     if (!user) return res.status(404).json({ message: 'User not found' })
 
-    res.json({ success: true, profile: user })
+    const experiences = await Experience.findAll({ where: { userId: req.user.id }, order: [['startDate', 'DESC']] })
+    const projects = await Project.findAll({ where: { userId: req.user.id }, order: [['startDate', 'DESC']] })
+
+    res.json({ success: true, profile: user, experiences, projects })
   } catch (err: any) {
     res.status(500).json({ success: false, message: 'Server error fetching profile' })
   }
 }
 
+// Experience endpoints
+const getExperiences = async (req: any, res: any) => {
+  try {
+    const experiences = await Experience.findAll({ where: { userId: req.user.id }, order: [['startDate', 'DESC']] })
+    res.json({ success: true, experiences })
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: 'Server error fetching experiences' })
+  }
+}
+
+const createExperience = async (req: any, res: any) => {
+  try {
+    const experience = await Experience.create({
+      userId: req.user.id,
+      ...req.body
+    })
+    res.json({ success: true, experience })
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: 'Server error creating experience' })
+  }
+}
+
+const updateExperience = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+    const experience = await Experience.findOne({ where: { id, userId: req.user.id } })
+    if (!experience) return res.status(404).json({ message: 'Experience not found' })
+    await experience.update(req.body)
+    res.json({ success: true, experience })
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: 'Server error updating experience' })
+  }
+}
+
+const deleteExperience = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+    const experience = await Experience.findOne({ where: { id, userId: req.user.id } })
+    if (!experience) return res.status(404).json({ message: 'Experience not found' })
+    await experience.destroy()
+    res.json({ success: true, message: 'Experience deleted' })
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: 'Server error deleting experience' })
+  }
+}
+
+// Project endpoints
+const getProjects = async (req: any, res: any) => {
+  try {
+    const projects = await Project.findAll({ where: { userId: req.user.id }, order: [['startDate', 'DESC']] })
+    res.json({ success: true, projects })
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: 'Server error fetching projects' })
+  }
+}
+
+const createProject = async (req: any, res: any) => {
+  try {
+    const project = await Project.create({
+      userId: req.user.id,
+      ...req.body
+    })
+    res.json({ success: true, project })
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: 'Server error creating project' })
+  }
+}
+
+const updateProject = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+    const project = await Project.findOne({ where: { id, userId: req.user.id } })
+    if (!project) return res.status(404).json({ message: 'Project not found' })
+    await project.update(req.body)
+    res.json({ success: true, project })
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: 'Server error updating project' })
+  }
+}
+
+const deleteProject = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+    const project = await Project.findOne({ where: { id, userId: req.user.id } })
+    if (!project) return res.status(404).json({ message: 'Project not found' })
+    await project.destroy()
+    res.json({ success: true, message: 'Project deleted' })
+  } catch (err: any) {
+    res.status(500).json({ success: false, message: 'Server error deleting project' })
+  }
+}
+
 const updateProfile = async (req: any, res: any) => {
   try {
-    const { company, domain, skills, resumeUrl } = req.body
-
+    const { company, domain, skills, resumeUrl, bio, position, education, linkedinUrl, name } = req.body
+    
     const user = await User.findByPk(req.user.id)
     if (!user) return res.status(404).json({ message: 'User not found' })
 
-    // Update only allowed fields
-    if (user.role === 'PROFESSIONAL' || user.role === 'HR') {
-      if (company !== undefined) user.company = company === '' ? null : company
-      if (domain !== undefined) user.domain = domain === '' ? null : domain
-    }
-
+    // Update fields
+    if (name !== undefined) user.name = name === '' ? user.name : name
+    if (company !== undefined) user.company = company === '' ? null : company
+    if (domain !== undefined) user.domain = domain === '' ? null : domain
     if (skills !== undefined) user.skills = skills === '' ? null : skills
     if (resumeUrl !== undefined) user.resumeUrl = resumeUrl === '' ? null : resumeUrl
+    if (bio !== undefined) user.bio = bio === '' ? null : bio
+    if (position !== undefined) user.position = position === '' ? null : position
+    if (education !== undefined) user.education = education === '' ? null : education
+    if (linkedinUrl !== undefined) user.linkedinUrl = linkedinUrl === '' ? null : linkedinUrl
 
     await user.save()
 
@@ -98,4 +197,17 @@ const getStats = async (req: any, res: any) => {
   }
 }
 
-export { getProfile, updateProfile, getUsers, getStats };
+export { 
+  getProfile, 
+  updateProfile, 
+  getUsers, 
+  getStats,
+  getExperiences,
+  createExperience,
+  updateExperience,
+  deleteExperience,
+  getProjects,
+  createProject,
+  updateProject,
+  deleteProject
+};

@@ -75,18 +75,50 @@ const OnboardingPage = () => {
           </div>
 
           <h1 className="auth-title">
-            {step === 1 ? `Welcome, ${user?.name?.split(' ')[0] ?? 'there'} 👋` : step === 2 ? 'Your Skills' : 'Connect Your Profiles'}
+            {step === 1 ? `Welcome, ${user?.name?.split(' ')[0] ?? 'there'} 👋` : step === 2 && user?.role !== 'HR' ? 'Your Skills' : 'Connect Your Profiles'}
           </h1>
           <p className="auth-subtitle">
-            {step === 1 ? 'Tell us a bit about yourself to get better referral matches.'
-              : step === 2 ? 'Select skills to help referrers understand your background.'
-              : 'Add your LinkedIn or GitHub to strengthen your profile.'}
+            {step === 1 ? 'Tell us a bit about yourself to complete your profile.'
+              : step === 2 && user?.role !== 'HR' ? 'Select skills to help referrers understand your background.'
+              : 'Add your LinkedIn to strengthen your profile.'}
           </p>
 
           {error && <div className="auth-error">{error}</div>}
 
           {step === 1 && (
             <div className="auth-form">
+              <div className="auth-field">
+                <label className="auth-label">Current / Target Company</label>
+                <input
+                  type="text"
+                  className="auth-input"
+                  placeholder={user?.role === 'HR' ? "Your Company" : "e.g. Google, Infosys"}
+                  value={company}
+                  onChange={e => setCompany(e.target.value)}
+                />
+              </div>
+              <div className="auth-field">
+                <label className="auth-label">{user?.role === 'HR' ? 'Your Title / Role' : 'Role / Position'}</label>
+                <input
+                  type="text"
+                  className="auth-input"
+                  placeholder={user?.role === 'HR' ? "e.g. Technical Recruiter" : "e.g. Software Engineer, Fresher"}
+                  value={position}
+                  onChange={e => setPosition(e.target.value)}
+                />
+              </div>
+              {user?.role !== 'HR' && (
+                <div className="auth-field">
+                  <label className="auth-label">Education</label>
+                  <input
+                    type="text"
+                    className="auth-input"
+                    placeholder="e.g. B.Tech CSE · IIT Delhi · 2024"
+                    value={education}
+                    onChange={e => setEducation(e.target.value)}
+                  />
+                </div>
+              )}
               <div className="auth-field">
                 <label className="auth-label">Bio (optional)</label>
                 <textarea
@@ -97,43 +129,13 @@ const OnboardingPage = () => {
                   rows={3}
                 />
               </div>
-              <div className="auth-field">
-                <label className="auth-label">Current / Target Company</label>
-                <input
-                  type="text"
-                  className="auth-input"
-                  placeholder="e.g. Google, Infosys"
-                  value={company}
-                  onChange={e => setCompany(e.target.value)}
-                />
-              </div>
-              <div className="auth-field">
-                <label className="auth-label">Role / Position</label>
-                <input
-                  type="text"
-                  className="auth-input"
-                  placeholder="e.g. Software Engineer, Fresher"
-                  value={position}
-                  onChange={e => setPosition(e.target.value)}
-                />
-              </div>
-              <div className="auth-field">
-                <label className="auth-label">Education</label>
-                <input
-                  type="text"
-                  className="auth-input"
-                  placeholder="e.g. B.Tech CSE · IIT Delhi · 2024"
-                  value={education}
-                  onChange={e => setEducation(e.target.value)}
-                />
-              </div>
-              <button className="auth-btn-primary" onClick={() => setStep(2)}>
+              <button className="auth-btn-primary" onClick={() => setStep(user?.role === 'HR' ? 3 : 2)}>
                 Next →
               </button>
             </div>
           )}
 
-          {step === 2 && (
+          {step === 2 && user?.role !== 'HR' && (
             <div className="auth-form">
               <div className="skills-grid">
                 {SKILLS_OPTIONS.map(skill => (
@@ -169,7 +171,7 @@ const OnboardingPage = () => {
                 />
               </div>
               <div className="onboarding-nav">
-                <button className="inbox-btn outline" onClick={() => setStep(2)}>← Back</button>
+                <button className="inbox-btn outline" onClick={() => setStep(user?.role === 'HR' ? 1 : 2)}>← Back</button>
                 <button
                   className="auth-btn-primary"
                   style={{ flex: 1 }}

@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useAuthStore } from "../store/useAuthStore";
 import "@/styles/Frame237.css";
 import "@/styles/clickable.css";
 import "@/styles/landing.css";
 
 const LandingPage = () => {
     const navigate = useNavigate();
+    const { isAuthenticated } = useAuthStore();
     const [searchQuery, setSearchQuery] = useState("");
 
     const handleSearch = (e: React.FormEvent) => {
@@ -48,19 +50,39 @@ const LandingPage = () => {
 
                             {/* CTA buttons */}
                             <div id="2_53" className="Pixso-frame-2_53">
-                                <div id="2_54" className="stroke-wrapper-2_54 clickable" onClick={() => navigate('/login')} style={{ cursor: 'pointer' }}>
-                                    <div className="Pixso-frame-2_54">
-                                        <div className="frame-content-2_54">
-                                            <p id="2_135" className="Pixso-paragraph-2_135">{"Log In"}</p>
+                                {isAuthenticated ? (
+                                    <>
+                                        <div id="2_54" className="stroke-wrapper-2_54 clickable" onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer' }}>
+                                            <div className="Pixso-frame-2_54">
+                                                <div className="frame-content-2_54">
+                                                    <p id="2_135" className="Pixso-paragraph-2_135">{"Dashboard"}</p>
+                                                </div>
+                                            </div>
+                                            <div className="stroke-2_54"></div>
                                         </div>
-                                    </div>
-                                    <div className="stroke-2_54"></div>
-                                </div>
-                                <div id="2_55" className="Pixso-frame-2_55 clickable" onClick={() => navigate('/signup')} style={{ cursor: 'pointer' }}>
-                                    <div className="frame-content-2_55">
-                                        <p id="2_56" className="Pixso-paragraph-2_56">{"Get Referred Free"}</p>
-                                    </div>
-                                </div>
+                                        <div id="2_55" className="Pixso-frame-2_55 clickable" onClick={() => navigate('/profile')} style={{ cursor: 'pointer' }}>
+                                            <div className="frame-content-2_55">
+                                                <p id="2_56" className="Pixso-paragraph-2_56">{"My Profile"}</p>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div id="2_54" className="stroke-wrapper-2_54 clickable" onClick={() => navigate('/login')} style={{ cursor: 'pointer' }}>
+                                            <div className="Pixso-frame-2_54">
+                                                <div className="frame-content-2_54">
+                                                    <p id="2_135" className="Pixso-paragraph-2_135">{"Log In"}</p>
+                                                </div>
+                                            </div>
+                                            <div className="stroke-2_54"></div>
+                                        </div>
+                                        <div id="2_55" className="Pixso-frame-2_55 clickable" onClick={() => navigate('/signup')} style={{ cursor: 'pointer' }}>
+                                            <div className="frame-content-2_55">
+                                                <p id="2_56" className="Pixso-paragraph-2_56">{"Get Referred Free"}</p>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -134,8 +156,8 @@ const LandingPage = () => {
                                                     <div id="2_80" className="Pixso-vector-2_80"></div>
                                                     <div id="2_81" className="Pixso-frame-2_81">
                                                         <div className="frame-content-2_81">
-                                                            <p id="2_82" className="Pixso-paragraph-2_82">{"Rahul Sharma"}</p>
-                                                            <p id="2_83" className="Pixso-paragraph-2_83">{"SDE-3 @ Google · 4 yrs exp"}</p>
+                                                            <p id="2_82" className="Pixso-paragraph-2_82">{"Talha Khan"}</p>
+                                                            <p id="2_83" className="Pixso-paragraph-2_83">{"SDE-3 @ Google · 2 yrs exp"}</p>
                                                         </div>
                                                     </div>
                                                     <div id="2_84" className="Pixso-frame-2_84">
