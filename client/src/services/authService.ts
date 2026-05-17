@@ -1,70 +1,44 @@
-import { api } from './api';
+import { api } from '../utils/api';
 
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-export interface SignupData {
-  name: string;
-  email: string;
-  password: string;
-  role?: 'fresher' | 'professional';
-}
-
-export interface AuthUser {
-  id: string;
-  name: string;
-  email: string;
-  role?: string;
-  profilePicture?: string;
-}
-
-export interface AuthResponse {
-  user: AuthUser;
+type AuthResponse = {
+  user: any;
   token: string;
-}
+};
 
 export const authService = {
-  async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const response = await api.post('/auth/login', credentials);
-    return response.data;
-  },
-
-  async signup(userData: SignupData): Promise<AuthResponse> {
-    const response = await api.post('/auth/register', userData);
-    return response.data;
+  async login(email: string, password: string): Promise<AuthResponse> {
+    const response = await api.post('/auth/login', { email, password });
+    const { user, token } = response.data;
+    localStorage.setItem('authToken', token);
+    return { user, token };
   },
 
   async logout(): Promise<void> {
-    try {
-      await api.post('/auth/logout');
-    } catch {
-      // ignore logout errors
-    }
+    localStorage.removeItem('authToken');
   },
 
-  async getMe(): Promise<AuthUser> {
+  async getMe(): Promise<any> {
     const response = await api.get('/auth/me');
-    return response.data.user;
-  },
-
-  async refreshToken(): Promise<{ token: string }> {
-    const response = await api.post('/auth/refresh');
     return response.data;
   },
 
-  // Google OAuth
-  async getGoogleAuthUrl(): Promise<string> {
-    // This should be constructed on frontend or returned from backend
-    return `${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/google`;
-  },
-
   async handleGoogleCallback(token: string): Promise<AuthResponse> {
-    // Store the token received from Google OAuth callback
-    localStorage.setItem('authToken', token);
-    // Get user info with the new token
-    const user = await this.getMe();
-    return { user, token };
+    // Validate the token before storage
+    try {
+      // Validate token with the backend
+      const response = await api.get('/auth/validate', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      // Store only after successful validation
+      localStorage.setItem('authToken', token);
+      // Get user info with the new token
+      const user = await this.getMe();
+      return { user, token };
+    } catch (error) {
+      // Clear any existing invalid token
+      localStorage.removeItem('authToken');
+      throw new Error('Invalid OAuth token provided');
+    }
   },
 };
