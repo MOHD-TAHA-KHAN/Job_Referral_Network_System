@@ -271,8 +271,8 @@ This project uses a **dual-token JWT strategy**:
 - [x] Full Stack TypeScript Migration
 - [x] Minimalist Bento UI Overhaul
 - [x] Auth system (JWT + Google OAuth)
-- [x] User profiles (Fresher & Professional)
-- [x] Job listings with advanced search & performant filters
+- [] User profiles (Fresher & Professional)
+- [] Job listings with advanced search & performant filters
 - [ ] Referral request flow
 - [ ] Smart matching algorithm
 - [ ] Real-time messaging (Socket.io)
