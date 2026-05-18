@@ -306,3 +306,8 @@ Built with passion by a fresher, for freshers.
 ## 📄 License
 
 This project is licensed under the **Apache License 2.0** — see the [LICENSE](LICENSE) file for details.
+
+## Wiki
+This repository's GitHub Wiki has been enabled: https://github.com/MOHD-TAHA-KHAN/Job_Referral_Network_System/wiki
+
+Please add pages to the wiki for architecture, deployment, contribution guidelines, and runbook documentation.
