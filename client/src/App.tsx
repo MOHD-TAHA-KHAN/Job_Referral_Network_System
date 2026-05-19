@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { RouterView } from './router';
 import { useAuthStore } from './store/useAuthStore';
 import './App.css';
@@ -11,7 +12,12 @@ const App = () => {
     initAuth();
   }, [initAuth]);
 
-  return <RouterView />;
+  return (
+    <>
+      <RouterView />
+      <SpeedInsights />
+    </>
+  );
 };
 
 export default App;
