@@ -1,0 +1,13 @@
+node_modules
+.git
+.gitignore
+README.md
+REQUIREMENTS.md
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+dist
+.next
+out

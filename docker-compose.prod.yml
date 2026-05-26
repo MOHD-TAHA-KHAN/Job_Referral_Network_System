@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # ---------------------
+  # 1. PostgreSQL
+  # ---------------------
+  postgres:
+    image: postgres:15
+    container_name: refnet_postgres_prod
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_DB: ${DB_NAME:-referraldb}
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - refnet-network
+
+  # ---------------------
+  # 2. Backend API
+  # ---------------------
+  server:
+    build:
+      context: .
+      dockerfile: DockerFile
+    container_name: refnet_server_prod
+    restart: always
+    ports:
+      - '5000:5000'
+    environment:
+      - NODE_ENV=production
+      - PG_URI=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-password}@postgres:5432/${DB_NAME:-referraldb}
+      # Add other production environment variables here or via .env file
+    depends_on:
+      - postgres
+    networks:
+      - refnet-network
+
+  # ---------------------
+  # 3. Frontend Client
+  # ---------------------
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: refnet_client_prod
+    restart: always
+    ports:
+      - '80:80'
+    depends_on:
+      - server
+    networks:
+      - refnet-network
+
+volumes:
+  postgres_data_prod:
+
+networks:
+  refnet-network:
+    driver: bridge
