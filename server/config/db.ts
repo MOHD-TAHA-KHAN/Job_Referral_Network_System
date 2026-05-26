@@ -40,7 +40,10 @@ const connectPostgres = async () => {
       (Project as any).associate({ User });
 
       await sequelize.authenticate()
-      await sequelize.sync({ alter: true })
+      
+      // SAFE: Only create tables if they don't exist, never auto-alter schema
+      // For schema changes, use migrations instead (see /migrations folder)
+      await sequelize.sync({ force: false, alter: false })
 
       console.log('PostgreSQL connected successfully!')
       break

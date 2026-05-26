@@ -52,33 +52,33 @@ const LandingPage = () => {
                             <div id="2_53" className="Pixso-frame-2_53">
                                 {isAuthenticated ? (
                                     <>
-                                        <div id="2_54" className="stroke-wrapper-2_54 clickable" onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer' }}>
+                                        <div id="2_54_auth" className="stroke-wrapper-2_54 clickable" onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer' }}>
                                             <div className="Pixso-frame-2_54">
                                                 <div className="frame-content-2_54">
-                                                    <p id="2_135" className="Pixso-paragraph-2_135">{"Dashboard"}</p>
+                                                    <p id="2_135_auth" className="Pixso-paragraph-2_135">{"Dashboard"}</p>
                                                 </div>
                                             </div>
                                             <div className="stroke-2_54"></div>
                                         </div>
-                                        <div id="2_55" className="Pixso-frame-2_55 clickable" onClick={() => navigate('/profile')} style={{ cursor: 'pointer' }}>
+                                        <div id="2_55_auth" className="Pixso-frame-2_55 clickable" onClick={() => navigate('/profile')} style={{ cursor: 'pointer' }}>
                                             <div className="frame-content-2_55">
-                                                <p id="2_56" className="Pixso-paragraph-2_56">{"My Profile"}</p>
+                                                <p id="2_56_auth" className="Pixso-paragraph-2_56">{"My Profile"}</p>
                                             </div>
                                         </div>
                                     </>
                                 ) : (
                                     <>
-                                        <div id="2_54" className="stroke-wrapper-2_54 clickable" onClick={() => navigate('/login')} style={{ cursor: 'pointer' }}>
+                                        <div id="2_54_guest" className="stroke-wrapper-2_54 clickable" onClick={() => navigate('/login')} style={{ cursor: 'pointer' }}>
                                             <div className="Pixso-frame-2_54">
                                                 <div className="frame-content-2_54">
-                                                    <p id="2_135" className="Pixso-paragraph-2_135">{"Log In"}</p>
+                                                    <p id="2_135_guest" className="Pixso-paragraph-2_135">{"Log In"}</p>
                                                 </div>
                                             </div>
                                             <div className="stroke-2_54"></div>
                                         </div>
-                                        <div id="2_55" className="Pixso-frame-2_55 clickable" onClick={() => navigate('/signup')} style={{ cursor: 'pointer' }}>
+                                        <div id="2_55_guest" className="Pixso-frame-2_55 clickable" onClick={() => navigate('/signup')} style={{ cursor: 'pointer' }}>
                                             <div className="frame-content-2_55">
-                                                <p id="2_56" className="Pixso-paragraph-2_56">{"Get Referred Free"}</p>
+                                                <p id="2_56_guest" className="Pixso-paragraph-2_56">{"Get Referred Free"}</p>
                                             </div>
                                         </div>
                                     </>
@@ -255,11 +255,11 @@ const LandingPage = () => {
                             { name: "Wipro", url: "https://careers.wipro.com/" },
                             { name: "TCS", url: "https://www.tcs.com/careers" },
                             { name: "Amazon", url: "https://www.amazon.jobs/" }
-                        ].map((co, i) => (
+                        ].map((co) => (
                             <a 
                                 key={co.name} 
-                                id={`2_${142 + i}`} 
-                                className={`Pixso-paragraph-2_${142 + i} clickable`}
+                                id={`company-link-${co.name.toLowerCase()}`}
+                                className="Pixso-paragraph-2_142 clickable"
                                 href={co.url}
                                 target="_blank"
                                 rel="noopener noreferrer"

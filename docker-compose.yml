@@ -1,6 +1,6 @@
+version: '3.8'
 
 services:
-
   # ---------------------
   # 1. PostgreSQL
   # ---------------------
@@ -29,6 +29,41 @@ services:
       - '5050:80'
     depends_on:
       - postgres
+
+  # ---------------------
+  # 2. Backend API (Dev)
+  # ---------------------
+  server:
+    image: node:20-alpine
+    container_name: refnet_server_dev
+    working_dir: /app
+    volumes:
+      - ./server:/app
+      - /app/node_modules # Prevent overwriting node_modules inside container
+    ports:
+      - '5000:5000'
+    environment:
+      - NODE_ENV=development
+      - PG_URI=postgresql://postgres:password@postgres:5432/referraldb
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      - postgres
+
+  # ---------------------
+  # 3. Frontend Client (Dev)
+  # ---------------------
+  client:
+    image: node:20-alpine
+    container_name: refnet_client_dev
+    working_dir: /app
+    volumes:
+      - ./client:/app
+      - /app/node_modules # Prevent overwriting node_modules inside container
+    ports:
+      - '5173:5173'
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    depends_on:
+      - server
 
 volumes:
   postgres_data:
