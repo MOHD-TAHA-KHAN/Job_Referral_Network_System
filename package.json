@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@supabase/supabase-js": "^2.105.4",
+    "@vercel/analytics": "^2.0.1",
     "cloudinary": "^2.10.0",
     "cookie-parser": "^1.4.7",
     "multer": "^2.1.1"
